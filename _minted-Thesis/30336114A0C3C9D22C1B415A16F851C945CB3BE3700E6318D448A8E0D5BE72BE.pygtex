@@ -1,7 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k}{def} \PYG{n+nf}{get\PYGZus{}snp\PYGZus{}tickers}\PYG{p}{():}
-  \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
-\PYG{l+s+sd}{    Code example}
-\PYG{l+s+sd}{  \PYGZsq{}\PYGZsq{}\PYGZsq{}}
-  \PYG{k}{pass}
-\end{Verbatim}

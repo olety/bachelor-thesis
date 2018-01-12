@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+c1}{\PYGZsh{} Selecting random colors for groups using a list comprehension with an f\PYGZhy{}string}
-\PYG{n}{community\PYGZus{}colors} \PYG{o}{=} \PYG{p}{[}\PYG{n}{f}\PYG{l+s+s1}{\PYGZsq{}\PYGZsh{}\PYGZob{}random.randint(0, 0xFFFFFF):06x\PYGZcb{}\PYGZsq{}} \PYG{k}{for} \PYG{n}{comm} \PYG{o+ow}{in} \PYG{n}{hdg\PYGZus{}imap}\PYG{p}{]}
-\PYG{c+c1}{\PYGZsh{} Creating a list that will be used to assign color to every vertice}
-\PYG{n}{vert\PYGZus{}colors} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{vcount}\PYG{p}{()))}
-\PYG{c+c1}{\PYGZsh{} Initializing lists that will hold the edge attributes}
-\PYG{n}{edge\PYGZus{}colors} \PYG{o}{=} \PYG{p}{[]}
-\PYG{n}{edge\PYGZus{}weights} \PYG{o}{=} \PYG{p}{[]}
-\end{Verbatim}

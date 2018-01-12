@@ -86,9 +86,8 @@
 
 
 
-% 1. Introduction
-\newpage
 %===============================================================================
+\newpage
 \section{INTRODUCTION}
 %===============================================================================
 
@@ -131,11 +130,10 @@ In the third part, I'll delve into the YouTube system, and will try to download 
 
 Lastly, the fourth part will contain conclusions.
 
-\newpage
 %===============================================================================
+\newpage
 \section{TABULAR DATA ANALYSIS}
 %===============================================================================
-
 %-------------------------------------------------------------------------------
 \subsection{Project Overview}
 %-------------------------------------------------------------------------------
@@ -149,24 +147,29 @@ Lastly, the fourth part will contain conclusions.
 \end{easylist}
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Data gathering (pandas-datareader)}
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Traditional stock visualizations (matplotlib)}
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Stock correlation matrix visualization (matplotlib)}
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Predictive analysis with a LSTM neural network (keras)}
 %-------------------------------------------------------------------------------
 
 
-\newpage
+
 %===============================================================================
+\newpage
 \section{GRAPH DATA ANALYSIS}
 %===============================================================================
 %-------------------------------------------------------------------------------
@@ -184,6 +187,7 @@ Lastly, the fourth part will contain conclusions.
 
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Preprocessing and igraph creation}
 %-------------------------------------------------------------------------------
 \begin{easylist}
@@ -192,54 +196,87 @@ Lastly, the fourth part will contain conclusions.
 \end{easylist}
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Community detection (igraph)}
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Plotting large graphs (datashader)}
 %-------------------------------------------------------------------------------
-
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsubsection{Simple plot}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \improvement[inline]{Add a note about how datashader failed to plot the entire graph and why it's not a good idea in the first place (hard to see the points)}
 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsubsection{Plotting communities}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
 %-------------------------------------------------------------------------------
+\newpage
 \subsection{Plotting small graphs (igraph)}
 %-------------------------------------------------------------------------------
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Simple plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\myparagraph{Selecting vertices}
+
+\listcode[src/youtube/hdg/1_selecting.py]{Using infomap to cluster the subgraph}
+
+\myparagraph{Styling the resulting plot}
+
+\listcodecont[src/youtube/hdg/2_style_dict.py]{Initializing color and weight lists}
+
+\myparagraph{Plotting and saving the resulting plot to a file}
+
+\listcodecont[src/youtube/hdg/3_plotting.py]{Assigning color to vertices}
+
+\myparagraph{Reviewing the results}
+
+Nothing is visible, etc.
+
+\listcode[src/youtube/hdg/4_full.py]{Assigning color to edges}
+
+
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\newpage
+\subsubsection{Simple community plot}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \myparagraph{Clustering the subgraph}
 
 The size of the subgraph we're clustering is smaller than the one used in the datashader example (only \improvement{list the number of nodes} nodes), so we can use the infomap clustering algorithm on it right away.
 
-\listcode[src/youtube/hdg/1_selecting.py]{Using infomap to cluster the subgraph}
+\listcode[src/youtube/hdg_com/1_clustering.py]{Using infomap to cluster the subgraph}
 
-%
 \myparagraph{Making communities visible}
 
 There are a couple of ways to make communities in your graph more visible on the resulting plot. You could (1) use color to distinguish between them, (2) draw vertices from one community close to each other, (3) separate communities by drawing their boundaries, or (4) label each vertice with their community label. Some of those techniques are only effective when applied to very small graphs (like labelling), while other are a better fit for a medium-sized graph like the one used in this example.
 
-\listcodecont[src/youtube/hdg/2_style_dict.py]{Initializing color and weight lists}
-
-\listcodecont[src/youtube/hdg/3_plotting.py]{Assigning color to vertices}
-
-\listcode[src/youtube/hdg/4_full.py]{Assigning color to edges}
-
-%
-\newpage
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subsubsection{Simple community plot}
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\listcode[src/youtube/hdg_com/1_clustering.py]{Using infomap to cluster the subgraph}
-
 \listcodecont[src/youtube/hdg_com/2_initializing_colors.py]{Initializing color and weight lists}
+
+Something about the algorithm here.
 
 \listcodecont[src/youtube/hdg_com/3_colors_looping_vert.py]{Assigning color to vertices}
 
 \listcodecont[src/youtube/hdg_com/4_colors_looping_edge.py]{Assigning color to edges}
 
+\myparagraph{Styling the resulting plot}
+
+Something about using graph properties to style the plot.
+
 \listcodecont[src/youtube/hdg_com/5_styling_prop.py]{Styling using graph properties}
 
+Something about using the style dictionary to style the plot.
+
 \listcodecont[src/youtube/hdg_com/6_style_dict.py]{Styling using a style dict}
+
+\myparagraph{Plotting and reviewing the results}
+
+Something about the plot.
 
 \listcodecont[src/youtube/hdg_com/7_plotting.py]{Saving the plot to a file}
 
@@ -264,7 +301,7 @@ Style dictionary for the weighted graph is very similar to the one that was used
 \listcodecont[src/youtube/hdg_weighted/2_style_dict.py]{Styling using a style dict}
 
 %
-\myparagraph{Plotting and results}
+\myparagraph{Plotting and reviewing results}
 
 \listcodecont[src/youtube/hdg_weighted/3_plotting.py]{Saving the plot to a file}
 

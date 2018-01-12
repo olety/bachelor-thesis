@@ -1,0 +1,306 @@
+% Using a4paper and 12pt font by default
+\documentclass[12pt, a4paper]{article}
+
+%Includes "References" in the table of contents
+\usepackage[nottoc]{tocbibind}
+
+
+% Pictures and /includegraphics
+\usepackage{graphicx}
+
+% Links in the table of contents + other stuff
+\usepackage[hidelinks, linktoc=all]{hyperref}
+
+% Support multi-page code listings
+\usepackage[all]{hypcap}
+\usepackage{subcaption}
+
+% Times New Roman font
+\usepackage[T1]{fontenc}
+\usepackage{newtxmath,newtxtext}
+
+% Margins
+\usepackage[margin=2.5cm]{geometry}
+
+% Interline
+\usepackage{setspace}
+\setstretch{1.5}
+
+% Use more than one optional parameter in a new commands
+\usepackage{xargs}
+
+% Coloured text etc.
+\usepackage[pdftex,dvipsnames]{xcolor}
+
+% Todo notes
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+
+% Code highlighting
+\usepackage{minted}
+\usemintedstyle{tango}
+\newcommandx{\listcode}[2][1=]{\bgroup\inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{#1}\captionof{listing}{#2}\egroup}
+\newcommandx{\listcodecont}[2][1=]{\bgroup\inputminted[linenos, breaklines=true, fontsize=\scriptsize,firstnumber=last]{python}{#1}\captionof{listing}{#2}\egroup}
+
+% New line after paragraph title
+\newcommandx{\myparagraph}[1]{\paragraph{#1}\mbox{}}
+
+% List stuff easily
+\usepackage[sharp]{easylist}
+
+\let\OldEasylist\easylist
+\let\OldEndEasylist\endeasylist
+\renewenvironment{easylist}{%
+    \OldEasylist%
+    \ListProperties(Progressive*=3ex, Start1=1)%
+}{%
+    \OldEndEasylist%
+}%
+
+\begin{document}
+
+% Title page
+
+\begin{titlepage}
+\end{titlepage}
+
+\newpage
+
+% Table of Contents
+
+\tableofcontents
+
+\newpage
+% Misc
+\newpage
+\listoftodos[Temporary Notes]
+
+% Abstract
+
+\begin{abstract}
+
+\end{abstract}
+
+
+
+% 1. Introduction
+\newpage
+%===============================================================================
+\section{INTRODUCTION}
+%===============================================================================
+
+%-------------------------------------------------------------------------------
+\subsection{State of the Art in Data Science}
+%-------------------------------------------------------------------------------
+\improvement[inline]{Use stuff from the presentation}
+\begin{easylist}
+# Why is data analysis useful?
+## Modern amounts of data explanation
+## Data analysis explanation
+# What tools are used to deal with large amounts of data?
+## Traditional - ETL and DW (microsoft, qlikview, ...)
+## Explorational - spark, R, python, matlab
+# Why choose python?
+## Advantages and disadvantages of using python
+## Overview of chosen packages
+\end{easylist}
+
+\change[inline]{Rewrite everything}
+%-------------------------------------------------------------------------------
+\subsection{Goals of the Research}
+%-------------------------------------------------------------------------------
+ In the modern world, big data and machine learning are becoming more and more prominent as companies such as Facebook, Google and Amazon gather and analyze all sorts of data from their users. But which tools are they using to do it?
+
+Right now, the two main languages in data science are \texttt{Python} and \texttt{R}, while \texttt{Matlab} is also quite popular despite only being used in the academic environment.
+
+This work's objective is to show how to use the Python 3 programming language in dealing with different kinds of data, and to help clarify any problems that might come up. It may be useful for long-term users of other languages that want to try Python out as well as users of Python 2, support for which will be stopped in 2020.
+%-------------------------------------------------------------------------------
+\subsection{Thesis Overview}
+%-------------------------------------------------------------------------------
+This work will be split into three parts, each working with a different dataset.
+
+In the first part, I'll show you how to obtain, plot and predict stocks based on the last 17 years' worth of stock data from NYSE\footnotemark. I'll also cover some common problems that might occur when one is trying to deal with such amount of data.
+\footnotetext{New York Stock Exchange}
+
+In the second part, I'll cover scraping facebook's API, and plotting geolocation data of their events. I'll also discuss some problems that might occur while trying to download data, as well as how to use latest tools from Python (like the asyncio library) to speed up the data gathering part greatly. I'll also give you a brief overview of the current data visualization landscape, and show you which plotting packages are the best to use when dealing with geolocation data.
+
+In the third part, I'll delve into the YouTube system, and will try to download and analyze their videos.
+
+Lastly, the fourth part will contain conclusions.
+
+\newpage
+%===============================================================================
+\section{TABULAR DATA ANALYSIS}
+%===============================================================================
+
+%-------------------------------------------------------------------------------
+\subsection{Project Overview}
+%-------------------------------------------------------------------------------
+\begin{easylist}
+# Goals
+## Describe the project
+# Obtaining the data (pandas-datareader)
+# Traditional stock visualizations (matplotlib)
+# Stock correlation matrix (matplotlib)
+# LSTM training (keras)
+\end{easylist}
+
+%-------------------------------------------------------------------------------
+\subsection{Data gathering (pandas-datareader)}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{Traditional stock visualizations (matplotlib)}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{Stock correlation matrix visualization (matplotlib)}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{Predictive analysis with a LSTM neural network (keras)}
+%-------------------------------------------------------------------------------
+
+
+\newpage
+%===============================================================================
+\section{GRAPH DATA ANALYSIS}
+%===============================================================================
+%-------------------------------------------------------------------------------
+\subsection{Project Overview}
+%-------------------------------------------------------------------------------
+\begin{easylist}
+# Goals
+## to show how to run community detection algorithms in igraph
+## to show how to plot the communities using two different methods - datashader  (larger data) and cairo (smaller data)
+## to show how to make the communities visually separatable and how to incorporate node weights in the plot
+# Tools(Libraries) used
+## Why I chose igraph
+\end{easylist}
+
+
+
+%-------------------------------------------------------------------------------
+\subsection{Preprocessing and igraph creation}
+%-------------------------------------------------------------------------------
+\begin{easylist}
+# Importing the data form konekt
+# Optimizing edges renaming with numpy vectorize/jit
+\end{easylist}
+
+%-------------------------------------------------------------------------------
+\subsection{Community detection (igraph)}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{Plotting large graphs (datashader)}
+%-------------------------------------------------------------------------------
+
+\improvement[inline]{Add a note about how datashader failed to plot the entire graph and why it's not a good idea in the first place (hard to see the points)}
+
+%-------------------------------------------------------------------------------
+\subsection{Plotting small graphs (igraph)}
+%-------------------------------------------------------------------------------
+\subsubsection{Simple plot}
+\myparagraph{Clustering the subgraph}
+
+The size of the subgraph we're clustering is smaller than the one used in the datashader example (only \improvement{list the number of nodes} nodes), so we can use the infomap clustering algorithm on it right away.
+
+\listcode[src/youtube/hdg/1_selecting.py]{Using infomap to cluster the subgraph}
+
+%
+\myparagraph{Making communities visible}
+
+There are a couple of ways to make communities in your graph more visible on the resulting plot. You could (1) use color to distinguish between them, (2) draw vertices from one community close to each other, (3) separate communities by drawing their boundaries, or (4) label each vertice with their community label. Some of those techniques are only effective when applied to very small graphs (like labelling), while other are a better fit for a medium-sized graph like the one used in this example.
+
+\listcodecont[src/youtube/hdg/2_style_dict.py]{Initializing color and weight lists}
+
+\listcodecont[src/youtube/hdg/3_plotting.py]{Assigning color to vertices}
+
+\listcode[src/youtube/hdg/4_full.py]{Assigning color to edges}
+
+%
+\newpage
+\subsubsection{Simple community plot}
+\listcode[src/youtube/hdg_com/1_clustering.py]{Using infomap to cluster the subgraph}
+
+\listcodecont[src/youtube/hdg_com/2_initializing_colors.py]{Initializing color and weight lists}
+
+\listcodecont[src/youtube/hdg_com/3_colors_looping_vert.py]{Assigning color to vertices}
+
+\listcodecont[src/youtube/hdg_com/4_colors_looping_edge.py]{Assigning color to edges}
+
+\listcodecont[src/youtube/hdg_com/5_styling_prop.py]{Styling using graph properties}
+
+\listcodecont[src/youtube/hdg_com/6_style_dict.py]{Styling using a style dict}
+
+\listcodecont[src/youtube/hdg_com/7_plotting.py]{Saving the plot to a file}
+
+\listcode[src/youtube/hdg_com/8_full.py]{Full version of the code}
+
+%
+\newpage
+\subsubsection{Weighted community plot}
+\myparagraph{Pagerank application}
+
+Pagerank \improvement{cite} is an algorithm developed by google.
+
+\listcode[src/youtube/hdg_weighted/1_pagerank.py]{Using pagerank to assign weights to vertices}
+
+%
+\myparagraph{Style dictionary}
+
+Style dictionary for the weighted graph is very similar to the one that was used to create the regular community plot, with an addition of ...
+
+\listcodecont[src/youtube/hdg_weighted/2_style_dict.py]{Styling using a style dict}
+
+%
+\myparagraph{Plotting and results}
+
+\listcodecont[src/youtube/hdg_weighted/3_plotting.py]{Saving the plot to a file}
+
+\listcode[src/youtube/hdg_weighted/4_full.py]{Full version of the code}
+
+\newpage
+%===============================================================================
+\section{GEODATA ANALYSIS}
+%===============================================================================
+
+%-------------------------------------------------------------------------------
+\subsection{Project Overview}
+%-------------------------------------------------------------------------------
+\begin{easylist}
+# Goals
+## to show how to deal with geodata in python
+# Plots
+## Animated plot - KPI per country (libnamehere)
+## Plot - KPI per state in a country (libnamehere)
+## Plot - KPI per region in a city (libnamehere)
+\end{easylist}
+
+%-------------------------------------------------------------------------------
+\subsection{Country-level plotting (libnamehere)}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{State-level plotting (libnamehere)}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{City-level plotting (libnamehere)}
+%-------------------------------------------------------------------------------
+
+
+
+
+
+% Literature references
+\newpage
+\nocite{*}
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}

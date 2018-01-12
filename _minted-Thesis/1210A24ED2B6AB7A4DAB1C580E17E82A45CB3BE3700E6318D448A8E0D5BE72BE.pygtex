@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{merge\PYGZus{}dfs}\PYG{p}{(}\PYG{n}{stock\PYGZus{}folder}\PYG{p}{,} \PYG{n}{save\PYGZus{}folder}\PYG{p}{,} \PYG{n}{time\PYGZus{}arr}\PYG{p}{,}
+              \PYG{n}{save\PYGZus{}fname}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}snp500\PYGZus{}merged.csv\PYGZsq{}}\PYG{p}{,} \PYG{n}{reload\PYGZus{}data}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{):}
+    \PYG{n}{fnames} \PYG{o}{=} \PYG{n+nb}{sorted}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{list\PYGZus{}csv}\PYG{p}{(}\PYG{n}{stock\PYGZus{}folder}\PYG{p}{)))}
+
+    \PYG{n}{to\PYGZus{}stack} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{col\PYGZus{}names} \PYG{o}{=} \PYG{p}{[]}
+
+    \PYG{k}{for} \PYG{n}{cur\PYGZus{}fname} \PYG{o+ow}{in} \PYG{n}{tqdm}\PYG{p}{(}\PYG{n}{fnames}\PYG{p}{,} \PYG{n}{desc}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Files processed\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{file}\PYG{o}{=}\PYG{n}{sys}\PYG{o}{.}\PYG{n}{stdout}\PYG{p}{,}
+                          \PYG{n}{leave}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{unit}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}file\PYGZsq{}}\PYG{p}{):}
+        \PYG{n}{cur\PYGZus{}fpath} \PYG{o}{=} \PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n}{stock\PYGZus{}folder}\PYG{p}{,} \PYG{n}{cur\PYGZus{}fname}\PYG{p}{)}
+        \PYG{n}{cur\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{n}{cur\PYGZus{}fpath}\PYG{p}{,} \PYG{n}{index\PYGZus{}col}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{n}{cur\PYGZus{}df}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}Open\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Close\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}High\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Low\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}Volume\PYGZsq{}}\PYG{p}{],}
+                    \PYG{n}{inplace}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+        \PYG{n}{to\PYGZus{}stack}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}df}\PYG{o}{.}\PYG{n}{as\PYGZus{}matrix}\PYG{p}{())}
+        \PYG{n}{col\PYGZus{}names}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}fname}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{4}\PYG{p}{])}
+    \PYG{n}{merged\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{stack}\PYG{p}{(}\PYG{n}{to\PYGZus{}stack}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)[:,} \PYG{p}{:,} \PYG{l+m+mi}{0}\PYG{p}{],}
+                             \PYG{n}{index}\PYG{o}{=}\PYG{n}{time\PYGZus{}arr}\PYG{p}{,} \PYG{n}{columns}\PYG{o}{=}\PYG{n}{col\PYGZus{}names}\PYG{p}{)}
+    \PYG{n}{save\PYGZus{}path} \PYG{o}{=} \PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n}{save\PYGZus{}folder}\PYG{p}{,} \PYG{n}{save\PYGZus{}fname}\PYG{p}{)}
+    \PYG{n}{merged\PYGZus{}df}\PYG{o}{.}\PYG{n}{to\PYGZus{}csv}\PYG{p}{(}\PYG{n}{save\PYGZus{}path}\PYG{p}{)}
+\end{Verbatim}

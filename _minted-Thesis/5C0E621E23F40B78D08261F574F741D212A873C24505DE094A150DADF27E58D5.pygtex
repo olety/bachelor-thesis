@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{save\PYGZus{}fname} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}plot\PYGZus{}pagerank\PYGZus{}fg.svg\PYGZsq{}}
+\PYG{n}{ig}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}imap}\PYG{p}{,} \PYG{n}{save\PYGZus{}fname}\PYG{p}{,} \PYG{o}{**}\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{)}
+\end{Verbatim}

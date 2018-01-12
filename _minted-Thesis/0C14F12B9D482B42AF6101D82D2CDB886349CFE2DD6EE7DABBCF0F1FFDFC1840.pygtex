@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{hdg\PYGZus{}pgrank} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{pagerank}\PYG{p}{()}
+\PYG{n}{hdg\PYGZus{}pgrank\PYGZus{}arr} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}pgrank}\PYG{p}{)}
+\end{Verbatim}

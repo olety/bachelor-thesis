@@ -1,0 +1,54 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Clustering the high degree subgraph}
+\PYG{n}{hdg\PYGZus{}imap} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{community\PYGZus{}infomap}\PYG{p}{()}
+\PYG{n}{hdg\PYGZus{}membership} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}imap}\PYG{o}{.}\PYG{n}{membership}
+
+\PYG{c+c1}{\PYGZsh{} Selecting random colors for groups using a list comprehension with an f\PYGZhy{}string}
+\PYG{n}{community\PYGZus{}colors} \PYG{o}{=} \PYG{p}{[}\PYG{n}{f}\PYG{l+s+s1}{\PYGZsq{}\PYGZsh{}\PYGZob{}random.randint(0, 0xFFFFFF):06x\PYGZcb{}\PYGZsq{}} \PYG{k}{for} \PYG{n}{comm} \PYG{o+ow}{in} \PYG{n}{hdg\PYGZus{}imap}\PYG{p}{]}
+\PYG{c+c1}{\PYGZsh{} Creating a list that will be used to assign color to every vertice}
+\PYG{n}{vert\PYGZus{}colors} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{vcount}\PYG{p}{()))}
+
+\PYG{c+c1}{\PYGZsh{} Initializing lists that will hold the edge attributes}
+\PYG{n}{edge\PYGZus{}colors} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{edge\PYGZus{}weights} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} Assigning the vertice color based on their community}
+\PYG{k}{for} \PYG{n}{comm\PYGZus{}id}\PYG{p}{,} \PYG{n}{comm} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}imap}\PYG{p}{):}
+    \PYG{k}{for} \PYG{n}{vert} \PYG{o+ow}{in} \PYG{n}{comm}\PYG{p}{:}
+        \PYG{n}{vert\PYGZus{}colors}\PYG{p}{[}\PYG{n}{vert}\PYG{p}{]} \PYG{o}{=} \PYG{n}{community\PYGZus{}colors}\PYG{p}{[}\PYG{n}{comm\PYGZus{}id}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} Assigning the edge color and weight based on the vertices it connects}
+\PYG{c+c1}{\PYGZsh{} Adding weights will make the group separation more visible}
+\PYG{k}{for} \PYG{n}{edge} \PYG{o+ow}{in} \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{hdg\PYGZus{}membership}\PYG{p}{[}\PYG{n}{edge}\PYG{o}{.}\PYG{n}{source}\PYG{p}{]} \PYG{o}{==} \PYG{n}{hdg\PYGZus{}membership}\PYG{p}{[}\PYG{n}{edge}\PYG{o}{.}\PYG{n}{target}\PYG{p}{]:}
+        \PYG{n}{edge\PYGZus{}colors}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{vert\PYGZus{}colors}\PYG{p}{[}\PYG{n}{edge}\PYG{o}{.}\PYG{n}{source}\PYG{p}{])}
+        \PYG{n}{edge\PYGZus{}weights}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mi}{3} \PYG{o}{*} \PYG{n}{hdg\PYGZus{}vcount}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{edge\PYGZus{}colors}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZsh{}dbdbdb\PYGZsq{}}\PYG{p}{)}
+        \PYG{n}{edge\PYGZus{}weights}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Styling the plot \PYGZhy{} graph properties}
+\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{vs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}color\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{vert\PYGZus{}colors}  \PYG{c+c1}{\PYGZsh{} Adding color as a vertice property}
+\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}color\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{edge\PYGZus{}colors}  \PYG{c+c1}{\PYGZsh{} Adding color as an edge property}
+\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}weight\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{edge\PYGZus{}weights}  \PYG{c+c1}{\PYGZsh{} Adding weight as an edge property}
+
+\PYG{c+c1}{\PYGZsh{} Styling the plot \PYGZhy{} style dictionary}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}layout\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYGZbs{}
+    \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{layout\PYGZus{}fruchterman\PYGZus{}reingold}\PYG{p}{(}\PYG{n}{maxiter}\PYG{o}{=}\PYG{l+m+mi}{1000}\PYG{p}{,}
+                                             \PYG{n}{weights}\PYG{o}{=}\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}weight\PYGZsq{}}\PYG{p}{],}
+                                             \PYG{n}{area}\PYG{o}{=}\PYG{n}{hdg\PYGZus{}vcount}\PYG{o}{**}\PYG{l+m+mi}{3}\PYG{p}{,}
+                                             \PYG{n}{repulserad}\PYG{o}{=}\PYG{n}{hdg\PYGZus{}vcount}\PYG{o}{**}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}bbox\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{,} \PYG{l+m+mi}{500}\PYG{p}{)}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}vertex\PYGZus{}size\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{0.5}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}vertex\PYGZus{}shape\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}circle\PYGZsq{}}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}edge\PYGZus{}width\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{0.1}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}palette\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ig}\PYG{o}{.}\PYG{n}{PrecalculatedPalette}\PYG{p}{(}\PYG{n}{community\PYGZus{}colors}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} hdg\PYGZus{}comm\PYGZus{}style[\PYGZsq{}mark\PYGZus{}groups\PYGZsq{}] = True \PYGZsh{} Activate if you want to delineate the groups}
+
+\PYG{c+c1}{\PYGZsh{} Plotting}
+\PYG{n}{save\PYGZus{}fname} \PYG{o}{=} \PYGZbs{}
+    \PYG{n}{f}\PYG{l+s+s1}{\PYGZsq{}/output/plots/hdg/\PYGZob{}hdg\PYGZus{}comm\PYGZus{}style[\PYGZdq{}bbox\PYGZdq{}][0]\PYGZcb{}\PYGZus{}\PYGZob{}hdg\PYGZus{}comm\PYGZus{}style[\PYGZdq{}bbox\PYGZdq{}][1]\PYGZcb{}/plot.svg\PYGZsq{}}
+\PYG{n}{os}\PYG{o}{.}\PYG{n}{makedirs}\PYG{p}{(}\PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{dirname}\PYG{p}{(}\PYG{n}{save\PYGZus{}fname}\PYG{p}{),} \PYG{n}{exist\PYGZus{}ok}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{n}{ig}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}imap}\PYG{p}{,} \PYG{n}{save\PYGZus{}fname}\PYG{p}{,} \PYG{o}{**}\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} mark\PYGZus{}groups=True}
+\end{Verbatim}

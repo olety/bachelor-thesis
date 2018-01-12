@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Selecting high degree nodes}
+\PYG{n}{hdg\PYGZus{}vertices} \PYG{o}{=} \PYG{n}{g}\PYG{o}{.}\PYG{n}{vs}\PYG{o}{.}\PYG{n}{select}\PYG{p}{(}\PYG{n}{\PYGZus{}degree\PYGZus{}ge}\PYG{o}{=}\PYG{l+m+mi}{800}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Select vertices with a high degree}
+\PYG{n}{hdg\PYGZus{}subgraph} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}vertices}\PYG{o}{.}\PYG{n}{subgraph}\PYG{p}{()}  \PYG{c+c1}{\PYGZsh{} Create a new subgraph}
+\PYG{n}{hdg\PYGZus{}vcount} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{vcount}\PYG{p}{()}  \PYG{c+c1}{\PYGZsh{} Will be used later in the layout calculation}
+\PYG{c+c1}{\PYGZsh{} Check the number of vertices}
+\PYG{k}{print}\PYG{p}{(}\PYG{n}{f}\PYG{l+s+s1}{\PYGZsq{}Number of vertices in the subgraph: \PYGZob{}hdg\PYGZus{}vcount\PYGZcb{}\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}

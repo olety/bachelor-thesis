@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Assigning the edge color and weight based on the vertices it connects}
+\PYG{c+c1}{\PYGZsh{} Adding weights will make the group separation more visible}
+\PYG{k}{for} \PYG{n}{edge} \PYG{o+ow}{in} \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{hdg\PYGZus{}membership}\PYG{p}{[}\PYG{n}{edge}\PYG{o}{.}\PYG{n}{source}\PYG{p}{]} \PYG{o}{==} \PYG{n}{hdg\PYGZus{}membership}\PYG{p}{[}\PYG{n}{edge}\PYG{o}{.}\PYG{n}{target}\PYG{p}{]:}
+        \PYG{n}{edge\PYGZus{}colors}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{vert\PYGZus{}colors}\PYG{p}{[}\PYG{n}{edge}\PYG{o}{.}\PYG{n}{source}\PYG{p}{])}
+        \PYG{n}{edge\PYGZus{}weights}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mi}{3} \PYG{o}{*} \PYG{n}{hdg\PYGZus{}vcount}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{edge\PYGZus{}colors}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZsh{}dbdbdb\PYGZsq{}}\PYG{p}{)}
+        \PYG{n}{edge\PYGZus{}weights}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+\end{Verbatim}

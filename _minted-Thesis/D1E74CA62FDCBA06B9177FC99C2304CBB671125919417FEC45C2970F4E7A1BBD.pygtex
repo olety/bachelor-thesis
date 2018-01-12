@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Plotting}
+\PYG{n}{save\PYGZus{}fname} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}plot\PYGZus{}naive.svg\PYGZsq{}}
+\PYG{n}{ig}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}subgraph}\PYG{p}{,} \PYG{n}{save\PYGZus{}fname}\PYG{p}{,} \PYG{o}{**}\PYG{n}{hdg\PYGZus{}style}\PYG{p}{)}
+\end{Verbatim}

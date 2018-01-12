@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Clustering the high degree subgraph}
+\PYG{n}{hdg\PYGZus{}imap} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{community\PYGZus{}infomap}\PYG{p}{()}
+\PYG{n}{hdg\PYGZus{}membership} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}imap}\PYG{o}{.}\PYG{n}{membership}
+\end{Verbatim}

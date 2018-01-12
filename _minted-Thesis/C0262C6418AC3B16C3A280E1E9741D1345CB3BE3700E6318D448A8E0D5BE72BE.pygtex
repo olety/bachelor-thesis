@@ -1,0 +1,43 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{get\PYGZus{}snp\PYGZus{}tickers}\PYG{p}{():}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Gets the list of S\PYGZam{}P500 stocks from wikipedia}
+
+\PYG{l+s+sd}{    Throws an exception if it can\PYGZsq{}t get the data}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{} We\PYGZsq{}ll be using wikipedia as a main data source}
+    \PYG{n}{URL} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}https://en.wikipedia.org/wiki/List\PYGZus{}of\PYGZus{}S\PYGZpc{}26P\PYGZus{}500\PYGZus{}companies\PYGZsq{}}
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Getting the wikipedia article...\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{resp} \PYG{o}{=} \PYG{n}{requests}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{URL}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} If we can\PYGZsq{}t get the page, just throw an exception}
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Checking the response code...\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{resp}\PYG{o}{.}\PYG{n}{status\PYGZus{}code} \PYG{o}{!=} \PYG{l+m+mi}{200}\PYG{p}{:}
+        \PYG{k}{raise} \PYG{n+ne}{Exception}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Couldn}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{t access the url.\PYGZsq{}}
+                        \PYG{l+s+s1}{\PYGZsq{}fResponse code \PYGZob{}resp.status\PYGZus{}code\PYGZcb{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} We\PYGZsq{}ve gotten the page by now; start parsing the response}
+    \PYG{n}{soup} \PYG{o}{=} \PYG{n}{bs}\PYG{o}{.}\PYG{n}{BeautifulSoup}\PYG{p}{(}\PYG{n}{resp}\PYG{o}{.}\PYG{n}{text}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}html5lib\PYGZsq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Find the table containing the tickers}
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Finding the table containing the tickers...\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{table} \PYG{o+ow}{in} \PYG{n}{soup}\PYG{o}{.}\PYG{n}{findAll}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}table\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}class\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}wikitable sortable\PYGZsq{}}\PYG{p}{\PYGZcb{}):}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} We\PYGZsq{}re searching for a table that has a \PYGZsq{}Ticker symbol\PYGZsq{} as its}
+            \PYG{c+c1}{\PYGZsh{} first column name}
+            \PYG{k}{if} \PYG{n}{table}\PYG{o}{.}\PYG{n}{findAll}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}th\PYGZsq{}}\PYG{p}{)[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{a}\PYG{o}{.}\PYG{n}{contents}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}Ticker symbol\PYGZsq{}}\PYG{p}{:}
+                \PYG{n}{res\PYGZus{}table} \PYG{o}{=} \PYG{n}{table}
+        \PYG{k}{except} \PYG{n+ne}{Exception}\PYG{p}{:}
+            \PYG{k}{pass}
+    \PYG{c+c1}{\PYGZsh{} Start extracting the tickers from the table}
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Extracting the tickers...\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{res\PYGZus{}arr} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{res\PYGZus{}table}\PYG{o}{.}\PYG{n}{findAll}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}tr\PYGZsq{}}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{:]:}
+        \PYG{c+c1}{\PYGZsh{} Replacing dots with dashes because otherwise we won\PYGZsq{}t be able to}
+        \PYG{c+c1}{\PYGZsh{} download them from yahoo finance \PYGZhy{} cleaning the data}
+        \PYG{n}{res\PYGZus{}arr}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}
+            \PYG{n}{row}\PYG{o}{.}\PYG{n}{findAll}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}td\PYGZsq{}}\PYG{p}{)[}\PYG{l+m+mi}{0}\PYG{p}{]}
+            \PYG{o}{.}\PYG{n}{a}\PYG{o}{.}\PYG{n}{contents}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+            \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{},\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}}\PYG{p}{)}
+        \PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{res\PYGZus{}arr}
+\end{Verbatim}

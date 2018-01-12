@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Plotting}
+\PYG{n}{ig}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}imap}\PYG{p}{,} \PYG{n}{save\PYGZus{}fname}\PYG{p}{,} \PYG{o}{**}\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} mark\PYGZus{}groups=True}
+\end{Verbatim}

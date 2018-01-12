@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Styling the plot \PYGZhy{} graph properties}
+\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{vs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}color\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{vert\PYGZus{}colors}  \PYG{c+c1}{\PYGZsh{} Adding color as a vertice property}
+\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}color\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{edge\PYGZus{}colors}  \PYG{c+c1}{\PYGZsh{} Adding color as an edge property}
+\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}weight\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{edge\PYGZus{}weights}  \PYG{c+c1}{\PYGZsh{} Adding weight as an edge property}
+\end{Verbatim}

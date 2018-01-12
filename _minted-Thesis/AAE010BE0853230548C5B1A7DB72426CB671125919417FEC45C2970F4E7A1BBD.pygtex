@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Plotting}
+\PYG{n}{save\PYGZus{}fname} \PYG{o}{=} \PYGZbs{}
+    \PYG{n}{f}\PYG{l+s+s1}{\PYGZsq{}/output/plots/hdg/\PYGZob{}hdg\PYGZus{}style[\PYGZdq{}bbox\PYGZdq{}][0]\PYGZcb{}\PYGZus{}\PYGZob{}hdg\PYGZus{}style[\PYGZdq{}bbox\PYGZdq{}][1]\PYGZcb{}/plot.svg\PYGZsq{}}
+\PYG{n}{os}\PYG{o}{.}\PYG{n}{makedirs}\PYG{p}{(}\PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{dirname}\PYG{p}{(}\PYG{n}{save\PYGZus{}fname}\PYG{p}{),} \PYG{n}{exist\PYGZus{}ok}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{n}{ig}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}subgraph}\PYG{p}{,} \PYG{n}{save\PYGZus{}fname}\PYG{p}{,} \PYG{o}{**}\PYG{n}{hdg\PYGZus{}style}\PYG{p}{)}
+\end{Verbatim}

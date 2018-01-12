@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Assigning the vertice color based on their community}
+\PYG{k}{for} \PYG{n}{comm\PYGZus{}id}\PYG{p}{,} \PYG{n}{comm} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{hdg\PYGZus{}imap}\PYG{p}{):}
+    \PYG{k}{for} \PYG{n}{vert} \PYG{o+ow}{in} \PYG{n}{comm}\PYG{p}{:}
+        \PYG{n}{vert\PYGZus{}colors}\PYG{p}{[}\PYG{n}{vert}\PYG{p}{]} \PYG{o}{=} \PYG{n}{community\PYGZus{}colors}\PYG{p}{[}\PYG{n}{comm\PYGZus{}id}\PYG{p}{]}
+\end{Verbatim}

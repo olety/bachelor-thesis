@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}layout\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYGZbs{}
+    \PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{layout\PYGZus{}fruchterman\PYGZus{}reingold}\PYG{p}{(}\PYG{n}{maxiter}\PYG{o}{=}\PYG{l+m+mi}{1000}\PYG{p}{,}
+                                             \PYG{n}{weights}\PYG{o}{=}\PYG{n}{hdg\PYGZus{}subgraph}\PYG{o}{.}\PYG{n}{es}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}weight\PYGZsq{}}\PYG{p}{],}
+                                             \PYG{n}{area}\PYG{o}{=}\PYG{n}{hdg\PYGZus{}vcount}\PYG{o}{**}\PYG{l+m+mi}{3}\PYG{p}{,}
+                                             \PYG{n}{repulserad}\PYG{o}{=}\PYG{n}{hdg\PYGZus{}vcount}\PYG{o}{**}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}bbox\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{,} \PYG{l+m+mi}{500}\PYG{p}{)}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}vertex\PYGZus{}size\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{hdg\PYGZus{}pgrank\PYGZus{}arr} \PYG{o}{*} \PYG{l+m+mi}{3000}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}vertex\PYGZus{}shape\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}circle\PYGZsq{}}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}edge\PYGZus{}width\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{0.1}
+\PYG{n}{hdg\PYGZus{}comm\PYGZus{}style}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}palette\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ig}\PYG{o}{.}\PYG{n}{PrecalculatedPalette}\PYG{p}{(}\PYG{n}{community\PYGZus{}colors}\PYG{p}{)}
+\end{Verbatim}

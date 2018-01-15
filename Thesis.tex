@@ -4,10 +4,14 @@
 %Includes "References" in the table of contents
 \usepackage[nottoc]{tocbibind}
 
+% Use more than one optional parameter in a new commands
+\usepackage{xargs}
+
+% Coloured text etc.
+\usepackage[pdftex,dvipsnames]{xcolor}
 
 % Pictures and /includegraphics
 \usepackage{graphicx}
-
 % Links in the table of contents + other stuff
 \usepackage[hidelinks, linktoc=all]{hyperref}
 
@@ -26,11 +30,11 @@
 \usepackage{setspace}
 \setstretch{1.5}
 
-% Use more than one optional parameter in a new commands
-\usepackage{xargs}
+% Footnotes
+\usepackage[bottom]{footmisc}
 
-% Coloured text etc.
-\usepackage[pdftex,dvipsnames]{xcolor}
+% Captions
+\usepackage{caption}
 
 % Todo notes
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
@@ -49,6 +53,7 @@
 \newcommandx{\myparagraph}[1]{\paragraph{#1}\mbox{}}
 
 % List stuff easily
+\usepackage{multicol}
 \usepackage[sharp]{easylist}
 
 \let\OldEasylist\easylist
@@ -59,6 +64,7 @@
 }{%
     \OldEndEasylist%
 }%
+
 
 \begin{document}
 
@@ -184,7 +190,11 @@ Lastly, the fourth part will contain conclusions.
 ## Why I chose igraph
 \end{easylist}
 
-
+\myparagraph{Packages needed}
+\begin{easylist}
+  # igraph
+  # cairocffi
+\end{easylist}
 
 %-------------------------------------------------------------------------------
 \newpage
@@ -220,31 +230,154 @@ Lastly, the fourth part will contain conclusions.
 \subsection{Plotting small graphs (igraph)}
 %-------------------------------------------------------------------------------
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subsubsection{Simple plot}
+\subsubsection{Goals and section overview}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\myparagraph{Goals}
+
+\begin{enumerate}
+  \item Show how to create a regular graph plot, and consider the idea that its simplicity may make it harder to read
+  \item Show how to create a graph plot with marked communities on it, and compare it to the regular plot in terms of ease of read
+  \item Show how to create a graph plot with marked communities that also shows the weight of its nodes, and compare this plot to the other two
+\end{enumerate}
+
+\myparagraph{Description}
+
+In this section, I will show you how to plot a smaller (around 2000 nodes) portion of our graph using tools that are supported by igraph, in particular using its bindings to a C library called \improvement{citation needed} cairo. Since it is originally written in C and only provides an API that other languages can use, we will also have to use a package that will be able to connect python code to the C library itself. In this example, I'm using cairocffi as such package, hence the inclusion of \mintinline{python}{import cairocffi as cairo} in the starting import list. We have to import it as cairo, because otherwise igraph will attempt to use a different binding package, \mintinline{python}{pycairo}, which is quite outdated and can outright refuse to save vector images.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsubsection{Regular plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \myparagraph{Selecting vertices}
 
-\listcode[src/youtube/hdg/1_selecting.py]{Using infomap to cluster the subgraph}
+First thing that we have to do in this section is to select a subgraph for plotting. I have decided to settle on the subgraph of vertices with high degrees, because that meant that every node would be connected to many other nodes, and that can be a good example of how to deal with clutter on the plot.
+
+In order to select this subgraph, you can use the \mintinline{python}{graph.vs.select(*args, **kwargs)} method in your graph. This method works differently based on what you pass it:\newline
+
+\begin{enumerate}
+  \item If you pass a list of integers into it \mintinline{python}{select([1,2,3])}, or skip the list and call \mintinline{python}{select(1,2,3)}, it will return vertices at those indexes
+  \item If you pass a special keyword argument to it, it will select all nodes with a property that match that argument
+  \item If you pass a function to it, it will call that function on every vertex and return all vertices that the function has returned \mintinline{python}{True} for
+  \item If you don't pass anything into the function, it returns an empty list
+\end{enumerate}
+
+The select method has 8 special keyword arguments:
+\begin{multicols}{2}
+  \begin{itemize}
+  \item \texttt{eq} - equal to
+  \item \texttt{ne} - not equal to
+  \item \texttt{lt} - less than
+  \item \texttt{gt} - greater than
+  \item \texttt{le} - less than or equal to
+  \item \texttt{ge} - greater than or equal to
+  \item \texttt{in} - value is in the given list
+  \item \texttt{notin} - value is not in the given list
+  \end{itemize}
+\end{multicols}
+
+Please note, that you have to include name of your property before the special keyword: \mintinline{python}{graph.vs.select(age_in=[19,20,21])}. You can see how I have used \mintinline{python}{gt} in the following example. The \mintinline{python}{_degree} you see in front of it is a semi-private variable (since no variable is truly private in python) that keeps track of the degree of the vertex.
+
+\listcode[src/youtube/hdg/1_selecting.py]{Selecting nodes for the subgraph}
 
 \myparagraph{Styling the resulting plot}
 
-\listcodecont[src/youtube/hdg/2_style_dict.py]{Initializing color and weight lists}
+There are many different options to choose from if you want to change how the graph appears on the screen. They are originally available as keyword arguments that you can pass to the \mintinline{python}{ig.plot()} function, but I advocate for putting all of those kwargs in a separate dictionary, \improvement{move save\_fname to the dictionary too} since it takes away from the dissaray of having to include many options into one function call.
+
+In this paper I will mainly focus on the layout option, as well as gloss over a couple of settings connected to the size of the vertices and edges, but if after reading this you will want to learn more about them, you can call \mintinline{python}{help(ig.plot)} while in a python interpreter to see the function's docstring.
+
+One of the most important arguments provided to us is the layout one, since it changes how nodes and edges are positioned in the resulting plot. It is possible to choose from the following layouts\footnote{Visual comparison is available at the page} \improvement{add visual comparison}:
+
+\begin{multicols}{2}
+  \begin{itemize}
+  \item Circle layout
+  \item Star layout
+  \item Grid layout
+  \item Fruchterman Reingold layout
+  \item Fruchterman Reingold grid layout
+  \item DrL layout
+  \item Graphopt layout
+  \item Kamada Kawai layout
+  \item Large Graph layout
+  \item Sugiyama layout
+  \item Random layout
+  \item Reingold Tilford layout (for trees)
+  \item Bipartite layour (for 2-layer graphs)
+  \end{itemize}
+\end{multicols}
+
+As you can see in the listing, other options are responsible for things like edge width, vertex size and shape, where to save the file, et cetera. The \texttt{bbox} argument is responsible for how big your final plot is going to be (in another words, it is declaring a limiting box on a figure that no vertex can cross). The \texttt{target} keyword argument is also very useful - it specifies the name of the file that your final chart will be stored in, and supports multiple file extentions (PDF, SVG, PNG).  In the next section I will also explain you how to add a color palette to the dictionary in order to distinguish the communities that we will detect.
+
+\listcodecont[src/youtube/hdg/2_style_dict.py]{Creating a style dictionary}
 
 \myparagraph{Plotting and saving the resulting plot to a file}
 
-\listcodecont[src/youtube/hdg/3_plotting.py]{Assigning color to vertices}
+Since we have already constructed the keyword argument dictionary for the plot function, the rest becomes very clean and easy - just pass it to the function while remembering to unroll it to convert it to key-value pairs.
+
+\listcodecont[src/youtube/hdg/3_plotting.py]{Plotting the image}
+
+\begin{figure}[hb]
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/hdg/hdg_simple}
+    \caption{Regular plot (Fruchterman Reingold layout)}
+    \label{fig:hdg_simple}
+\end{figure}
 
 \myparagraph{Reviewing the results}
 
-Nothing is visible, etc.
-
-\listcode[src/youtube/hdg/4_full.py]{Assigning color to edges}
+While igraph makes it quite easy to plot regular plots like these, they don't provide one with much insight into the data itself. While you could look at the picture made using the Fruchterman-Reingold layout, and detect two major communities in the network with a naked eye, other layouts aren't as simple to read. Furthermore, most of them look just black balls and are quite chaotic, which is a pretty common problem when dealing with plotting graphs.
 
 
+
+\begin{multicols}{2}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/1_plot_crc}\\
+  \captionof{figure}{Circular layout}
+  \label{fig:hdg_c1}}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/2_plot_str}\\
+  \captionof{figure}{Star layout}
+  \label{fig:hdg_c2}}
+\end{multicols}
+\begin{multicols}{2}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/3_plot_grd}\\
+  \captionof{figure}{Grid layout}
+  \label{fig:hdg_c3}}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/4_plot_frgrid}\\
+  \captionof{figure}{Fruchterman Reingold grid layout}
+  \label{fig:hdg_c4}}
+\end{multicols}
+\begin{multicols}{2}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/5_plot_drl}\\
+  \captionof{figure}{DrL layout}
+  \label{fig:hdg_c5}}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/6_plot_ghopt}\\
+  \captionof{figure}{Ghopt layout}
+  \label{fig:hdg_c6}}
+\end{multicols}
+\begin{multicols}{2}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/7_plot_kk}\\
+  \captionof{figure}{Kamada Kawai layout}
+  \label{fig:hdg_c7}}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/8_plot_random}\\
+  \captionof{figure}{Random layout}
+  \label{fig:hdg_c8}}
+\end{multicols}
+\begin{multicols}{2}
+  {\centering
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/9_plot_sgy}\\
+  \captionof{figure}{Sugiyama layout}
+  \label{fig:hdg_c9}}
+  \ \\
+  \ \\
+\end{multicols}
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\newpage
-\subsubsection{Simple community plot}
+\subsubsection{Community plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \myparagraph{Clustering the subgraph}
 
@@ -254,7 +387,7 @@ The size of the subgraph we're clustering is smaller than the one used in the da
 
 \myparagraph{Making communities visible}
 
-There are a couple of ways to make communities in your graph more visible on the resulting plot. You could (1) use color to distinguish between them, (2) draw vertices from one community close to each other, (3) separate communities by drawing their boundaries, or (4) label each vertice with their community label. Some of those techniques are only effective when applied to very small graphs (like labelling), while other are a better fit for a medium-sized graph like the one used in this example.
+There are a couple of ways to make communities in your graph more visible on the resulting plot. You could (1) use color to distinguish between them, (2) draw vertices from one community close to each other, (3) separate communities by drawing their boundaries, or (4) label each vertice with their community label. Some of those techniques are only effective when applied to very small graphs (like labeling), while other are a better fit for a medium-sized graph like the one used in this example.
 
 \listcodecont[src/youtube/hdg_com/2_initializing_colors.py]{Initializing color and weight lists}
 
@@ -280,10 +413,20 @@ Something about the plot.
 
 \listcodecont[src/youtube/hdg_com/7_plotting.py]{Saving the plot to a file}
 
-\listcode[src/youtube/hdg_com/8_full.py]{Full version of the code}
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/hdg_com/hdg_com}
+    \caption{Community plot}
+    \label{fig:hdg_com}
+\end{figure}
 
-%
-\newpage
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/hdg_com/hdg_com_marked}
+    \caption{Community plot - marked groups}
+    \label{fig:hdg_com_marked}
+\end{figure}
+
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Weighted community plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -305,10 +448,24 @@ Style dictionary for the weighted graph is very similar to the one that was used
 
 \listcodecont[src/youtube/hdg_weighted/3_plotting.py]{Saving the plot to a file}
 
-\listcode[src/youtube/hdg_weighted/4_full.py]{Full version of the code}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/hdg_weighted/hdg_pg_fg}
+    \caption{Weighted plot - Fruchterman Reingold layout}
+    \label{fig:hdg_pg_fg}
+\end{figure}
 
-\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/hdg_weighted/hdg_pg_kawai}
+    \caption{Weighted plot - Kamada Kawai layout}
+    \label{fig:hdg_pg_kawai}
+\end{figure}
+
+
+
 %===============================================================================
+\newpage
 \section{GEODATA ANALYSIS}
 %===============================================================================
 
@@ -319,22 +476,11 @@ Style dictionary for the weighted graph is very similar to the one that was used
 # Goals
 ## to show how to deal with geodata in python
 # Plots
-## Animated plot - KPI per country (libnamehere)
+## KPI per country (Basemap)
 ## Plot - KPI per state in a country (libnamehere)
-## Plot - KPI per region in a city (libnamehere)
+## Plot - Chikago Taxi (datashader)
 \end{easylist}
 
-%-------------------------------------------------------------------------------
-\subsection{Country-level plotting (libnamehere)}
-%-------------------------------------------------------------------------------
-
-%-------------------------------------------------------------------------------
-\subsection{State-level plotting (libnamehere)}
-%-------------------------------------------------------------------------------
-
-%-------------------------------------------------------------------------------
-\subsection{City-level plotting (libnamehere)}
-%-------------------------------------------------------------------------------
 
 
 

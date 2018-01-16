@@ -270,7 +270,7 @@ While datashader is certainly capable of plotting a huge amounts of data points,
 
 \myparagraph{Description}
 
-In this section, I will show you how to plot a smaller (around 2000 nodes) portion of our graph using tools that are supported by igraph, in particular using its bindings to a C library called \improvement{citation needed} cairo. Since it is originally written in C and only provides an API that other languages can use, we will also have to use a package that will be able to connect python code to the C library itself. In this example, I'm using cairocffi as such package, hence the inclusion of \texttt{import cairocffi as cairo} in the starting import list. We have to import it as cairo, because otherwise igraph will attempt to use a different binding package, \texttt{pycairo}, which is quite outdated and can outright refuse to save vector images.
+In this section, I will show you how to plot a smaller (around 1000 nodes) portion of our graph using tools that are supported by igraph, in particular using its bindings to a C library called \improvement{citation needed} cairo. Since it is originally written in C and only provides an API that other languages can use, we will also have to use a package that will be able to connect python code to the C library itself. In this example, I'm using cairocffi as such package, hence the inclusion of \texttt{import cairocffi as cairo} in the starting import list. We have to import it as cairo, because otherwise igraph will attempt to use a different binding package, \texttt{pycairo}, which is quite outdated and can outright refuse to save vector images.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Regular plot}
@@ -381,7 +381,7 @@ Also, I'd like to note that while I would love to include the large graph layout
 
 \begin{multicols}{2}
   {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/7_plot_kk}\\
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/5_plot_kk}\\
   \captionof{figure}{Kamada Kawai layout}
   \label{fig:hdg_c5}}
   {\centering
@@ -392,7 +392,7 @@ Also, I'd like to note that while I would love to include the large graph layout
 
 \begin{multicols}{2}
   {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/5_plot_drl}\\
+  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/7_plot_drl}\\
   \captionof{figure}{DrL layout}
   \label{fig:hdg_c7}}
   {\centering
@@ -525,9 +525,12 @@ Comparing this plot to the previous two, this clearly presents the most informat
 \end{easylist}
 
 
+%===============================================================================
+\newpage
+\section{CONCLUSION}
+%===============================================================================
 
-
-
+Include data types that we omit - biological data, food data, describe what you'd like for others to research.
 
 % Literature references
 \newpage

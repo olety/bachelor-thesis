@@ -1,9 +1,14 @@
-%!TeX spellcheck = en-US
 % Using a4paper and 12pt font by default
 \documentclass[12pt, a4paper]{article}
 
-%Includes "References" in the table of contents
-\usepackage[nottoc]{tocbibind}
+\usepackage[polish, british]{babel}
+
+% Bibliography
+\usepackage[backend=biber, giveninits=true, natbib=true, style=numeric, sorting=nty]{biblatex}
+\addbibresource{references.bib}
+
+\DeclareNameAlias{sortname}{family-given}
+\DeclareNameAlias{default}{family-given}
 
 % Use more than one optional parameter in a new commands
 \usepackage{xargs}
@@ -76,10 +81,6 @@
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
 
-% Hyphenation rules, etc.
-\usepackage{csquotes}
-\usepackage[british]{babel}
-
 % Unbold the subsubsection and paragraph
 \usepackage{titlesec}
 
@@ -89,36 +90,54 @@
 % Paragraph numbers
 % \setcounter{secnumdepth}{4}
 
-% Bibliography
-\usepackage[backend=biber, giveninits=true, natbib=true, style=numeric, sorting=nty]{biblatex}
-\addbibresource{references.bib}
 
-\DeclareNameAlias{sortname}{family-given}
-\DeclareNameAlias{default}{family-given}
+% Double abstract
+\newenvironment{abstractpage}
+  {\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
+  {\vfill\cleardoublepage}
+\renewenvironment{abstract}[1]
+  {\bigskip\selectlanguage{#1}%
+   \begin{center}\bfseries\abstractname\end{center}}
+  {\par\bigskip}
+
+% Title page
+\usepackage{pdfpages}
+
+% Hyphenation rules, etc.
+\usepackage{csquotes}
 
 \begin{document}
 
 % Title page
+\includepdf[pages={1}]{title_page.pdf}
 
-\begin{titlepage}
-\end{titlepage}
-
+% Special page
+\vspace*{\fill}
+\begin{center}
+The writing of the thesis has been requested.
+\end{center}
+\vspace{\fill}
 \newpage
 
 % Table of Contents
-
 \tableofcontents
+\newpage
 
-\newpage
-% Misc
-\newpage
+% Misc - todelete
 \listoftodos[Temporary Notes]
-
+\newpage
 % Abstract
 
-\begin{abstract}
-
+\begin{abstractpage}
+\begin{abstract}{polish}
+    blablabla
 \end{abstract}
+
+\begin{abstract}{british}
+    blablabla
+\end{abstract}
+\end{abstractpage}
+
 
 
 
@@ -293,7 +312,7 @@ A correlation matrix serves as a way to store relationships between stocks, and 
 
 \myparagraph{Summary}
 
--execute the functions-
+After defining all those functions, the only thing left now is to call them with correct arguments. As you can see from the listing \ref{listing:setl_3}, I use a datetime package from python’s standard library to specify the date ranges that I want to retrieve the data for, and in this case it’s from 2000 until 2017.
 
 \bgroup
   \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/3_executing.py}
@@ -301,21 +320,42 @@ A correlation matrix serves as a way to store relationships between stocks, and 
   \label{listing:setl_3}
 \egroup
 
+To sum up, while the pandas-datareader module requires a lot of extra checking to ensure that the data was actually downloaded, it simplifies the process of web scraping tremendously, since you can just call a function that accesses certain provider’s API by itself. And despite it being limited by the number of providers you can access with it, I would say that the benefit of not having to parse the html or json yourself can play a significant role in programmers choosing this package over plain old web scraping.
+
+
+
 %-------------------------------------------------------------------------------
 \newpage
 \subsection{Traditional stock visualizations (matplotlib)}
 %-------------------------------------------------------------------------------
+\subsubsection{Goals}
+The goal of this section is to show how to use matplotlib to plot some of the more traditional single stock visualizations.
 
+\subsubsection{Before plotting}
+
+\myparagraph{Imports}
+
+The packages that will be used in this section are listed in the listing \ref{listing:ssimp_0_imports} below.
 
 \bgroup
-  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, ]{python}{src/stocks/simple/1_get_data.py}
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/stocks/simple/0_imports.py}
+  \captionof{listing}{Imports}
+  \label{listing:ssimp_0_imports}
+\egroup
+
+\myparagraph{Data preparation}
+
+We don't need to do any preparations in this section except for loading the data in memory. Please note the usage of \texttt{plt.style.use('seaborn')} in the listing \ref{listing:ssimp_1} - it changes the default simple looking style of matplotlib plots into a one that looks more modern.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/simple/1_get_data.py}
   \captionof{listing}{Reading the data into the memory}
   \label{listing:ssimp_1}
 \egroup
 
 \subsubsection{Basic plot}
 
-A basic plot of one stock can be plotted without having to resort to creating your own figures in matplotlib, since a pandas DataFrame has a built-in plot function.
+A basic plot of one stock can be plotted without having to resort to creating your own plot in matplotlib, since a pandas DataFrame has a built-in plot function. In this example, I created an empty matplotlib figure first, then plotted the stock data on top of it and displated the figure using the \texttt{plt.show()} function. You can also call \texttt{plt.savefig('filename.pdf')} instead, if you want to save your plot to a file, or just click the save icon in the interactive window that \texttt{plt.show()} generates.
 
 \bgroup
   \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/simple/2_onestock.py}
@@ -344,14 +384,14 @@ A basic plot of one stock can be plotted without having to resort to creating yo
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{src/stocks/simple/movingavg}
+    \includegraphics[width=\textwidth]{src/stocks/simple/movingavg}
     \caption{Moving average plot}
     \label{fig:stock_movingavg}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{src/stocks/simple/movingavg_zoom}
+    \includegraphics[width=\textwidth]{src/stocks/simple/movingavg_zoom}
     \caption{Moving average plot - zoomed}
     \label{fig:stock_movingavg_zoom}
 \end{figure}
@@ -853,6 +893,6 @@ Include data types that we omit - biological data, food data, describe what you'
 % Literature references
 \newpage
 
-\printbibliography
+\printbibliography[heading=bibnumbered, title={REFERENCES}]
 
 \end{document}

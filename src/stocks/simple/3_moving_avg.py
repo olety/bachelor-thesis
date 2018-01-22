@@ -13,6 +13,7 @@ ax1.xaxis_date()
 ax1.plot(df_ma.index, df_ma['Adj Close'], color='#56648C')
 ax1.plot(df_ma.index, df_ma['50MA'], color='#FF5320', linewidth=1)
 plt.title('50 days moving average', fontsize=10, color='k')
+ax1.yaxis.set_label_text('Stock price ($/share)')
 
 # Axis 2
 ax2 = plt.subplot2grid((12, 1), (11, 0), rowspan=1, colspan=1, sharex=ax1)

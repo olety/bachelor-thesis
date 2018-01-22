@@ -1,7 +1,6 @@
 
 
-def get_stock_data(start_dt, end_dt, reload_tickers=False,
-                   max_tries=50, timeout=2, provider='yahoo',
+def get_stock_data(start_dt, end_dt, max_tries=50, timeout=2, provider='yahoo',
                    ticker_folder=os.path.join('data', 'tickers'),
                    ticker_fname='tickers.csv',
                    dest_folder=os.path.join('data', 'stocks')):
@@ -11,12 +10,10 @@ def get_stock_data(start_dt, end_dt, reload_tickers=False,
     Throws an exception is anything goes wrong.
     '''
     logging.debug('Obtaining the tickers...')
-    if reload_tickers:
-        tickers = save_tickers()
-    else:
-        tickers = pd.read_csv(os.path.join(ticker_folder, ticker_fname))
+    tickers = pd.read_csv(os.path.join(ticker_folder, ticker_fname))
     logging.debug('Obtained the tickers...')
     logging.debug(tickers)
+
     # We have to check whether the dest folder exists
     dest_path = dest_folder
     if not os.path.exists(dest_path):
@@ -32,6 +29,7 @@ def get_stock_data(start_dt, end_dt, reload_tickers=False,
         df = None
         logging.debug(f'Starting a new outer loop iteration for {ticker}')
         dest_fpath = os.path.join(dest_path, f'{ticker}.csv')
+        # Check if we downloaded it before
         if not os.path.exists(dest_fpath):
             # Try to download the stock for max_tries tries, waiting
             # for timeout in between tries
@@ -57,15 +55,16 @@ def get_stock_data(start_dt, end_dt, reload_tickers=False,
             if df is None:
                 logging.debug(f'Couldn\'t get the {ticker} data. Continuing')
                 continue
-
             logging.debug(f'Successfully got {ticker} data from {provider}. '
                           'Now saving it...')
+
             df.to_csv(dest_fpath)
             logging.debug(f'Saved the {ticker} data.')
         else:
             to_down_cnt -= 1
             logging.debug(f'Not downloading data for {ticker}, '
                           'since we already have it')
+
     logging.info('Finished processing all tickers!')
     logging.info(f'Downloaded: {down_cnt}/{to_down_cnt} items')
     logging.info(f'You can find the results in the folder {dest_path}')

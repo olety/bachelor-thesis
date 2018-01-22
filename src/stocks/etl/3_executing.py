@@ -15,7 +15,6 @@ reindex_csv(STOCK_FOLDER, STOCK_FOLDER, get_timearr(STOCK_FOLDER, 'A.csv'),
 
 # Merging the dataframes
 merge_dfs(STOCK_FOLDER, MERGED_FOLDER, reload_data=True)
-
 merge_dfs(STOCK_FOLDER, MERGED_FOLDER, save_fname='stocks_close_merged.csv',
           reload_data=True, add_per_oc=False, add_per_lohi=False, add_volume=False)
 

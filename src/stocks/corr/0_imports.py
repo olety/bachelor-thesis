@@ -1,16 +1,7 @@
-import bisect
-import datetime as dt
-import importlib
-import logging
+# STL
 import os
-import sys
-import time
-
+# Other
 import matplotlib
-from pprint import pprint
-import matplotlib.pyplot as plt  # Plots q
-
+import matplotlib.pyplot as plt  # Plots
 import numpy as np  # Arrays
 import pandas as pd  # DataFrames
-from IPython.display import display  # IPython display
-from matplotlib.finance import candlestick_ohlc  # Candlestick graph

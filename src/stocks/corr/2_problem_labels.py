@@ -13,5 +13,6 @@ fig.colorbar(hmap)
 ax1.set_xticklabels(df_corr.columns)
 ax1.set_yticklabels(df_corr.columns)
 
+# Plotting the heatmap
 plt.title('Stock correlation heatmap', color='k')
 plt.show()

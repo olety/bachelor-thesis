@@ -10,11 +10,13 @@ def merge_dfs(stock_folder, save_folder, save_fname='stocks_all_merged.csv',
 
     Raises an exception if something goes wrong.
     '''
+
     if (os.path.isfile(os.path.join(save_folder, save_fname)) and
             not reload_data):
         logging.warning('The target file is already present in the save_folder.'
                         ' Please use the reload_data argument to overwrite it.')
         return
+
     logging.debug('Started merging the stock data - getting the files')
     fnames = sorted(list(list_csv(stock_folder)))
     logging.debug('Number of csv files in the folder: {}'.format(len(fnames)))
@@ -32,7 +34,6 @@ def merge_dfs(stock_folder, save_folder, save_fname='stocks_all_merged.csv',
         col_names.append(cur_ticker)
 
         logging.debug(f'Processing the file {cur_fname}')
-
         cur_df = pd.read_csv(cur_fpath, index_col=0)
 
         if add_volume:
@@ -50,18 +51,19 @@ def merge_dfs(stock_folder, save_folder, save_fname='stocks_all_merged.csv',
 
         cur_df.drop(['Open', 'Close', 'High', 'Low'],
                     inplace=True, axis=1)
-
         to_stack.append(cur_df.as_matrix())
 
     # It's faster to just stack a list of numpy arrays than to try and merge dfs
     merged_df = pd.DataFrame(np.concatenate(to_stack, axis=1),
                              index=time_arr, columns=col_names)
+
     logging.debug('Finished merging dataframes')
     save_path = os.path.join(save_folder, save_fname)
-
     logging.debug(f'Saving the data to {save_path}')
+
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
 
     merged_df.to_csv(save_path)
+
     return merged_df

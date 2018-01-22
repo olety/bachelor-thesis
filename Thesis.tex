@@ -20,7 +20,7 @@
 \usepackage[utf8]{inputenc}
 
 % Pictures and /includegraphics
-\usepackage{graphicx}
+\usepackage[final]{graphicx}
 \usepackage{wrapfig}
 \usepackage{float}
 
@@ -47,13 +47,6 @@
 
 % Captions
 \usepackage{caption}
-
-% To-do notes
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
-\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
 
 % Code highlighting
 \usepackage{minted}
@@ -92,13 +85,13 @@
 
 
 % Double abstract
-\newenvironment{abstractpage}
-  {\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
-  {\vfill\cleardoublepage}
-\renewenvironment{abstract}[1]
-  {\bigskip\selectlanguage{#1}%
-   \begin{center}\bfseries\abstractname\end{center}}
-  {\par\bigskip}
+% \newenvironment{abstractpage}
+%   {\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
+%   {\vfill\cleardoublepage}
+% \renewenvironment{abstract}[1]
+%   {\bigskip\selectlanguage{#1}%
+%    \begin{center}\bfseries\abstractname\end{center}}
+%   {\par\bigskip}
 
 % Title page
 \usepackage{pdfpages}
@@ -123,21 +116,29 @@ The writing of the thesis has been requested.
 \tableofcontents
 \newpage
 
-% Misc - todelete
-\listoftodos[Temporary Notes]
-\newpage
 % Abstract
 
-\begin{abstractpage}
-  \begin{abstract}{polish}
-      W dzisiejszych czasach znaczenie analizy dużej objętości danych staje się więcej i więcej oczywistą. Coraz więcej firm decydują otworzyć dział analizy danych po to, żeby polepszyć ich oferty, i pewne z ich nawet bazują swój produkt wokół analizy danych dla innych firm. Ta praca prezentuję pewne z metod analizy danych, korzystając z mowy programowania Python, która jest szeroko wykorzystana w dziedzinie nauki danych. Ona skupia się na pokazaniu czytającemu przykładów tego, jak można wykorzystać Python dla  analizy danych z publicznie dostępnych źródeł przez prezentacje początkowego kod różnych projektów również jak i wyników, które on generuje.
-  \end{abstract}
-
-  \begin{abstract}{british}
-    The importance of analyzing large volumes of data is becoming more and more apparent recently. More and more companies decide to open a data analysis department in order to improve their offerings, and some of them even base their product around analyzing data for other people. This work presents some of the data analysis methods using the Python programming language, which is widely used in the domain of data science. It focuses on showing the reader examples of how one can use Python to analyze data from publicly available sources by presenting the source code of different projects as well as the results that it generates.
-  \end{abstract}
-
-\end{abstractpage}
+\vspace*{\fill}
+\begin{otherlanguage}{polish}
+\begin{abstract}
+    W dzisiejszych czasach znaczenie analizy dużej objętości danych staje się bardziej i bardziej oczywista. Coraz więcej firm decyduje się otworzyć dział analizy danych w celu poprawy własnej oferty; inne z analizy danach utworzyły ofertę dla innych firm. Praca inżynierska prezentuje wybrane metody analizy danych oferowane przez środowisko programowania Python, szeroko wykorzystanym w dziedzinie teorii informacji. Szczególną uwagę poświęcono na pokazaniu czytelnikowi przykładów, jak można wykorzystać Python dla analizy danych z publicznie dostępnych źródeł przez prezentacje kodu z różnych projektów, jak i przykładowych wyników, które mogą zostać uzyskane.
+\end{abstract}
+\end{otherlanguage}
+\smallskip
+\begin{abstract}
+  The importance of analyzing large volumes of data is becoming more and more apparent in the modern era. An increasing number of companies decide to open a data analysis department in order to improve their offerings, and some of them even base their product around analyzing data for other people. This work presents some of the data analysis methods using the Python programming language environment, which is widely used in the domain of data science. It focuses on showing the reader examples of how one can use Python to analyze data from publicly available sources by presenting the source code of different projects as well as the results that it generates.
+\end{abstract}
+\vspace{\fill}
+% \begin{abstractpage}
+%   \begin{abstract}{polish}
+%
+%   \end{abstract}
+%
+%   \begin{abstract}{british}
+%
+%   \end{abstract}
+%
+% \end{abstractpage}
 
 
 
@@ -148,28 +149,11 @@ The writing of the thesis has been requested.
 %===============================================================================
 
 %-------------------------------------------------------------------------------
-\subsection{State of the Art in Data Science}
-%-------------------------------------------------------------------------------
-\improvement[inline]{Use stuff from the presentation}
-\begin{easylist}
-# Why is data analysis useful?
-## Modern amounts of data explanation
-## Data analysis explanation
-# What tools are used to deal with large amounts of data?
-## Traditional - ETL and DW (microsoft, qlikview, ...)
-## Explorational - spark, R, python, matlab
-# Why choose python?
-## Advantages and disadvantages of using python
-## Overview of chosen packages
-\end{easylist}
-
-\change[inline]{Rewrite everything}
-%-------------------------------------------------------------------------------
 \subsection{Goals of the Research}
 %-------------------------------------------------------------------------------
 In the modern world, big data and machine learning are becoming more and more prominent as companies such as Facebook, Google and Amazon gather and analyze all sorts of data from their users. But which tools are they using to do it?
 
-Right now, the two main languages in data science are \mintinline{python}{Python} and \mintinline{python}{R}, while \mintinline{python}{Matlab} is also quite popular despite only being used in the academic environment.
+Right now, the two main languages in data science are Python \cite{popularlanguages} and R, while Java is the third by popularity and Matlab is also quite popular despite only being used in the academic environment.
 
 This work's objective is to show how to use the Python 3 programming language in dealing with different kinds of data, and to help clarify any problems that might come up. It may be useful for long-term users of other languages that want to try Python out as well as users of Python 2, support for which will be stopped in 2020.
 %-------------------------------------------------------------------------------
@@ -177,12 +161,11 @@ This work's objective is to show how to use the Python 3 programming language in
 %-------------------------------------------------------------------------------
 This work will be split into three parts, each working with a different dataset.
 
-In the first part, I'll show you how to obtain, plot and predict stocks based on the last 17 years' worth of stock data from NYSE\footnotemark. I'll also cover some common problems that might occur when one is trying to deal with such amount of data.
-\footnotetext{New York Stock Exchange}
+The first project is dealing with the time series data, using the last 17 years' worth of stock data from NYSE\footnote{New York Stock Exchange}.
 
-In the second part, I'll cover scraping facebook's API, and plotting geolocation data of their events. I'll also discuss some problems that might occur while trying to download data, as well as how to use latest tools from Python (like the asyncio library) to speed up the data gathering part greatly. I'll also give you a brief overview of the current data visualization landscape, and show you which plotting packages are the best to use when dealing with geolocation data.
+The second project is dealing with the YouTube network, and is mostly showcasing different kinds of plots that you can make using the igraph and datashader packages. It also involves community detection.
 
-In the third part, I'll delve into the YouTube system, and will try to download and analyze their videos.
+The third project is dealing with the geographical data from the world bank\cite{world_bank_source}.
 
 Lastly, the fourth part will contain conclusions.
 
@@ -198,17 +181,17 @@ Lastly, the fourth part will contain conclusions.
 
 \begin{itemize}
 	\item To show how to use python to obtain stock price data
-	\item To show how to visualize the aforementioned data in different ways
-	\item To show how to predict future prices by using a LSTM neural network
+	\item To show how to visualize the aforementioned data using both traditional single stock visualizations methods as well as some more unorthodox ones like a correlation heatmap
+	\item To show how to predict future stock prices by using a LSTM neural network
 \end{itemize}
 
 \subsubsection{Description}
 
 This project will focus on dealing with time series data, which will be represented by the stock price data. It will contain four sections.
 
-In the first one, I will show how to use the pandas-datareader package to download stocks traded on the New York Stock Exchange (NYSE) from the yahoo! finance website and merge them into one comma separated file.
+In the first one, I will show how to use the pandas-datareader package to download stocks traded on the New York Stock Exchange (NYSE) from the Yahoo! finance website and merge them into one comma separated file.
 
-In the second section, I will cover simple visualizations of singular stocks using the matplotlib package, which will include moving average and candlestick plots.
+In the second section, I will cover simple visualizations of singular stocks using the pandas\cite{mckinney2010data_pandas} and matplotlib\cite{hunter2007matplotlib} packages, which will include moving average and candlestick plots.
 
 In the third section, I will cover visualization of a stock correlation matrix, which will, as opposed to the simple plots, include all of the stocks that were downloaded and not only one of them.
 
@@ -220,11 +203,11 @@ In the fourth and final section, I will demonstrate how to make a LSTM neural ne
 \subsection{Data gathering (pandas-datareader)}
 %-------------------------------------------------------------------------------
 
-\myparagraph{Goal}
+\subsubsection{Goals}
 
 The goal of this section is to show how to use python to obtain stock price data, and transform it for further use.
 
-\myparagraph{Process description}
+\subsubsection{Downloading the data}
 
 \begin{figure}[H]
     \centering
@@ -237,11 +220,11 @@ As you can see on the figure \ref{fig:stocks_download_chart}, the download proce
 
 There are a couple of methods to obtain a list of tickers that you want to analyze: you could go through the companies that interest you and look up the ticker for every one of them, you could use a package called BeautifulSoup to obtain the tickers by scraping a webpage, or, if you are dealing with all of the stocks traded on a particular market (like we are here with NYSE), the official webpage for that market usually provides such a list. In this case, I have downloaded a list of all tickers from NYSE from the official NASDAQ website \cite{nasdaq_companylist} and saved the ticker column from the provided file  manually.
 
-It is possible to just go trough them one by one and call the download function for every ticker, but that approach may be detrimental due to the fact that sometimes yahoo finance’s API  just outright refuses the pandas-datareader’s connection attempts, probably due to a large number of requests from one IP address.
+It is possible to just go trough them one by one and call the download function for every ticker, but that approach may be detrimental due to the fact that sometimes Yahoo! Finance’s API  just outright refuses the pandas-datareader’s connection attempts, probably due to a large number of requests from one IP address.
 
-Due to this inconsistency, we have to incorporate some fail-saves into the code, like checking whether the download was completed successfully and repeating it if something went wrong. The timeout between tries is also introduced here to avoid stressing the yahoo servers too much, and to avoid being flagged as a malicious user.
+Due to this inconsistency, we have to incorporate some fail-saves into the code, like checking whether the download was completed successfully and repeating it if something went wrong. The timeout between tries is also introduced here to avoid stressing the Yahoo! servers too much, and to avoid being flagged as a malicious user.
 
-After a stock is processed this way, we save the data if we have successfully downloaded it, and go to the next stock in the list. While this approach doesn’t guarantee that 100\% of the stocks will get downloaded, it protects us from being stuck in an infinite loop due to yahoo finance not having a data for a certain stock.
+After a stock is processed this way, we save the data if we have successfully downloaded it, and go to the next stock in the list. While this approach doesn’t guarantee that 100\% of the stocks will get downloaded, it protects us from being stuck in an infinite loop due to Yahoo! Finance not having a data for a certain stock.
 
 \myparagraph{Used packages}
 
@@ -264,11 +247,11 @@ Please pay attention to the use of the tqdm package in the listing \ref{listing:
   \label{listing:setl_1_download}
 \egroup
 
-\myparagraph{Data Transformation}
+\subsubsection{Data Transformation}
 
 After downloading the stocks, we are left with a lot of files, where every file represents the data for a single stock. And this is a problem if we want to run some computations that involve every stock, since then we would need to loop through all the individual files in order to achieve that. That’s why in this subsection I’ll show how to merge all those files in one CSV file.
 
-There are a couple of ways to accomplish this, but the one I find the most useful is to make numpy arrays out of the files, and then use the \texttt{np.concatenate} function to merge them. It is even possible to convert the resulting numpy array to a dataframe afterwards.
+There are a couple of ways to accomplish this, but the one I find the most useful is to make numpy\cite{walt2011numpy} arrays out of the files, and then use the \texttt{np.concatenate} function to merge them. It is even possible to convert the resulting numpy array to a dataframe afterwards.
 
 But there is one problem with this method. In order to  concatenate two numpy arrays, they must have the same number of rows (or columns, depending on which axis you are using to concatenate the arrays). And even though we have specified that we want data in a time period between 2000 and 2017, not every stock will actually have those dates in their CSV file. Since if a company had their IPO\footnote{Initial Public Offering - the first time that the company can be traded} after 2000, their file will start with the date that the stock could be traded.
 
@@ -311,7 +294,7 @@ A correlation matrix serves as a way to store relationships between stocks, and 
 \egroup
 
 
-\myparagraph{Summary}
+\subsubsection{Summary}
 
 After defining all those functions, the only thing left now is to call them with correct arguments. As you can see from the listing \ref{listing:setl_3}, I use a datetime package from python’s standard library to specify the date ranges that I want to retrieve the data for, and in this case it’s from 2000 until 2017.
 
@@ -332,8 +315,8 @@ To sum up, while the pandas-datareader module requires a lot of extra checking t
 \subsubsection{Goals}
 The goal of this section is to show how to use matplotlib to plot some of the more traditional single stock visualizations.
 
-\subsubsection{Before plotting}
 
+\subsubsection{Before plotting}
 \myparagraph{Imports}
 
 The packages that will be used in this section are listed in the listing \ref{listing:ssimp_0_imports} below.
@@ -344,7 +327,7 @@ The packages that will be used in this section are listed in the listing \ref{li
   \label{listing:ssimp_0_imports}
 \egroup
 
-\myparagraph{Data preparation}
+\myparagraph{Data loading}
 
 We don't need to do any preparations in this section except for loading the data in memory. Please note the usage of \texttt{plt.style.use('seaborn')} in the listing \ref{listing:ssimp_1} - it changes the default simple looking style of matplotlib plots into a one that looks more modern.
 
@@ -376,6 +359,12 @@ A basic plot of one stock can be plotted without having to resort to creating yo
 \end{multicols}
 
 \subsubsection{Moving average plot}
+
+In this subsection, I will show how to create a moving average plot. Moving average plots are used by analysts because they help to bring forward long-term trends and serve as a measure to smooth out outliers.
+
+In pandas, you can create a special column that keeps track of the moving average of last \texttt{n} days by using the command \texttt{df['column'].rolling(window=n).mean()}. Then, you can use this newly generated column as another input for the \texttt{plot} function, and plot the moving average and the close price on the same figure. You can also do this process for different values of n and plot multiple moving averages to compare them - if a MA with a smaller \texttt{n} rises and crosses the MA with a larger \texttt{n}, it means that the raise in the stock price is substantial and it might be worth it to invest in such a stock.
+
+I would also like to mention the \texttt{subplot2grid((y, x), (posy, posx))} function that you can see in the example - it breaks the figure down into an y by x grid, and allows you to pick a point that you would like to position a new axis object in. \texttt{rowspan} and \texttt{colspan} are used to determine how many rows or columns respectively this part of the plot should take.
 
 \bgroup
   \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/simple/3_moving_avg.py}
@@ -431,11 +420,19 @@ As you can see in the figures \ref{fig:stock_candlestick_zoom} above and \ref{fi
 \subsection{Stock correlation matrix visualization (matplotlib)} \label{ssec:stock_corr}
 %-------------------------------------------------------------------------------
 
+\subsubsection{Goals and section overview}
+
+\myparagraph{Goal}
+
+The goal of this section is to show, how you can visualize a stock correlation matrix, as well as to discuss the necessity of such visualization.
+
+\myparagraph{Correlation matrix}
+
 A correlation between two stock prices shows, whether a rise in price of one stock correlates with a rise or fall in price of another stock, or whether two stocks are completely independent.
 
 A logical, albeit a bit inefficient, way to store correlation between a certain number of stocks is to create a so-called correlation matrix, whose structure you can see in table \ref{table:corr}.
 
-Research like \cite{kwapien2006bulk} suggests that correlation matrix may contain useful information about the stock market, which makes it into a metric that can be used by stock investors that would like to diversify their investment portfolio as much as possible, thus ensuring that if one of the stocks they have invested in drops in price, the other ones remain stable.
+Some research\cite{kwapien2006bulk} suggests that correlation matrix may contain useful information about the stock market, which makes it into a metric that can be used by stock investors that would like to diversify their investment portfolio as much as possible, thus ensuring that if one of the stocks they have invested in drops in price, the other ones remain stable.
 
 \begin{table}[h!]
 \centering
@@ -457,17 +454,43 @@ Research like \cite{kwapien2006bulk} suggests that correlation matrix may contai
 Once we have this matrix, a question arises - how can we visualize it? In this example visualization, I'll use a heat map chart, because of how the correlation numbers can be treated as colors.
 
 \bgroup
-  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/stocks/corr/1_get_data.py}
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/stocks/corr/0_imports.py}
+  \captionof{listing}{Imports}
+  \label{listing:scorr_0_imports}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/corr/1_get_data.py}
   \captionof{listing}{Reading the data into the memory}
   \label{listing:scorr_1}
 \egroup
 
+\subsubsection{Naive plot}
+
+In this plot, I have used the \texttt{pcolormesh} function in order to create a heat map of the values from the df\_corr dataframe. Data didn’t require any extra preprocessing, since the correlations are already in a range \texttt{[-1:1]}, and that means that the colors will render properly.
+
+Unfortunately, if you try to plot a heat map this large, some problems starts to occur with matplotlib. In this case, if just thought that the last cell to the right was a stock with a name starting with “A”, even though it should be something from the other part of the alphabet, like “Z”. And even if you try to zoom into the plot, those labels don’t update and continue to be wrong. I will cover how to deal with this problem by inheriting from a formatter class in the section \ref{sssec:correct_corr_plot}.
 
 \bgroup
   \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/corr/2_problem_labels.py}
-  \captionof{listing}{First attempt at making a correlation matrix}
+  \captionof{listing}{Correlation matrix - labels are broken}
   \label{listing:scorr_2}
 \egroup
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/stocks/corr/corr}
+    \caption{Correlation plot (incorrect labels)}
+    \label{fig:stock_corr}
+\end{figure}
+
+\subsubsection{Correct plot}\label{sssec:correct_corr_plot}
+
+The default matplotlib tick formatter can’t dynamically update values. This means, that if I would want to set the ticks myself, I would have to display all of them on the screen at the same time, which just leads to all the labels overlapping with each other. But we can inherit from the matplotlib’s tick formatter class in order to solve this issue. As you can see in the listing \ref{listing:scorr_3}, you only have to override two functions from the parent class in order to achieve dynamic update of the labels, even if it does make the plot somewhat stutter when you use the interactive zoom feature.
+
+I have also used the MaxNLocator, which is similar to the default matplotlib’s behavior - it will choose to use between min\_n\_ticks and nbins + 1 locations, and position them in “nice locations”, according to matplotlib’s documentation. Both of those variables are keyword arguments to its \_\_init\_\_ function, and can easily be changed.
+
+I would also like to point out, that while it can’t be seen in the figures below, if you mouseover a cell in the heat map while being in an interactive mode, the program displays you the stocks that the chosen cell represents.
 
 \bgroup
   \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/corr/3_fix.py}
@@ -475,10 +498,161 @@ Once we have this matrix, a question arises - how can we visualize it? In this e
   \label{listing:scorr_3}
 \egroup
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{src/stocks/corr/corr_fix}
+    \caption{Correlation plot (fixed)}
+    \label{fig:stock_corr_fix}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{src/stocks/corr/corr_fix_zoom}
+    \caption{Correlation plot (fixed) - zoomed}
+    \label{fig:stock_corr_fix_zoom}
+\end{figure}
+
+\subsubsection{Summary and necessity of plotting the matrix}
+
+In retrospective, I would say that there are problems with this plot simply because it’s too cluttered and hard to understand. You have to zoom in whenever you want to actually see the correlation between some stocks and not just some vague green or red lines. However, once zoomed in it becomes quite easy to check the correlation between two plots. I think that it could be improved by either focusing more on the neutrally correlated stocks, and making the highly positive and highly negative areas transparent, or by making the number of stocks that we have to show smaller. Since the current version displays all stocks from the market and is very hard to read due to the number of rows and columns being too high, I think that a version with 5, 10 or maybe even 20 stocks could be better since then you would actually see all of the date from a picture without having to zoom.
+
 %-------------------------------------------------------------------------------
 \newpage
 \subsection{Predictive analysis with a LSTM neural network (keras)}
 %-------------------------------------------------------------------------------
+\subsubsection{Goals and project overview}
+
+The goal of this section is to show how to predict future stock prices using a long short term memory neural networks.
+
+\myparagraph{Project description}
+
+A long short term memory neural network is a type of a recursive neural network, that was invented in 1997 by Hochreiter and Schmidhuber\cite{hochreiter1997long}. It replaces the standard neuron from a NN with a memory cell that not only learns how to predict something, but also how to forget something in order to be able to indentify long-term dependancies.
+
+In this project, I will feed the neural network with the data for an entire NYSE stock market using the keras\cite{chollet2015keras} with tensorflow\cite{abadi2016tensorflow} backend, and try to predict the price of one stock based on that.
+
+\myparagraph{Used packages}
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/stocks/lstm/0_imports.py}
+  \captionof{listing}{Imports}
+  \label{listing:slstm_0_imports}
+\egroup
+
+\subsubsection{Data preparation}
+
+Loading the data in the memory is the same as in the plotting section, but now we will need to preprocess it into a format that is acceptable by keras.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/1_data.py}
+  \captionof{listing}{Loading data into the memory}
+  \label{listing:slstm_1_data}
+\egroup
+
+
+\myparagraph{Preprocessing}
+
+A LSTM NN requires us to feed it input in sequential blocks of data and not just block by block like a regular NN - this utilizes the memory function of the lstm neurons, and allows for these types of networks to predict next entry in a dataset (movie frames, stock prices, human speech, etc.). For the purpose of this example, I have chosen for the block size to be 30 days. It means, that we have to split out current dataset into 30-day continuous chunks. You can see me do it in the lines 59-67 of the listing \ref{listing:slstm_2a_preprocessing}. I start with an empty arrays X and y, and then add slices of 30 days to them until I can no longer add any.
+
+You can also see how it is possible to scale features to a range between 0 and 1 (which improve your neural network's results \cite{muller2016introduction} \cite{grus2015data}) by using scikit-learn's\cite{pedregosa2011scikit} built in MinMaxScaler as well as how to execute a Principal Component Analysis\cite{wold1987principal} with another scikit-learn object. PCA reduces the number of features in your dataset, and while it may be detrimental to the results, a smaller number of features makes your neural network train a lot faster.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/2a_preprocessing.py}
+  \captionof{listing}{Declaring the data preprocessing functions}
+  \label{listing:slstm_2a_preprocessing}
+\egroup
+
+The split\_x\_y function is mostly a wrapper for the convert\_series function that converts the input dataframe into those window-sized chunks and splits the dataset into a train and a test set.
+
+Please note the usage of the pickle package in the listing \ref{listing:slstm_2b_preprocessing_exec} - it can be very useful, since if you save your objects to the drive by pickling them you don't have to generate them again.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/2b_preprocessing_exec.py}
+  \captionof{listing}{Executing the data preprocessing functions}
+  \label{listing:slstm_2b_preprocessing_exec}
+\egroup
+
+\subsubsection{Network creation}
+
+Netork creation is rather simple using keras - you just have to initialize an instance of the \texttt{Sequential} class to serve as your model's base, and then you can start adding layers to it using the \texttt{add} function. While it's rather obvious that \texttt{LSTM} means Long Short Term Memory layer, a dense layer is a layer filled with regular neurons, and a dropout keyword argument shows how many neurons will be randomly reset on each run. While it may sound counterintuitive, it sometimes is beneficial and helps to avoid overfitting. The loss chosen in this example is a mean squared error loss, or ``mse'', if we use keras' terms. The optimizer chosen for this example is Adam, which has been shown to converge faster than other similar algorithms in the study that introduced it\cite{kingma2014adam}.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/3a_onelayer.py}
+  \captionof{listing}{Creating a neural network with one layer}
+  \label{listing:slstm_3a_onelayer}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/3b_twolayer.py}
+  \captionof{listing}{Creating a neural network with two layers}
+  \label{listing:slstm_3b_twolayer}
+\egroup
+
+\subsubsection{Network training}
+
+The \texttt{model.fit()} function in keras is used to train the network. It takes parameters like batch\_size, that indicates how many entries we want to process at once, epoch\_size, that shows how many times we want to go through the input dataset as well as validation\_split that shows what fraction of the train data should be left for validation.
+
+But I would like to focus your attention on the callbacks parameter, since it is a very interesting feauture of keras that allows you to specify ``monitors"", that will watch the training and do something if their condition is satisfied. For example, you can look at the listing \ref{listing:slstm_4a_fit} and see how I defined an early stopping monitor that monitors \texttt{val\_loss} with the patience of 5 on line 168. It means, that if our val\_loss doesn't improve for 5 epochs in a row (which shows that adam has found a local minimum), it will stop the training, thus saving us a lot of time. That said, it won't be beneficial every time, since sometimes the found minimum isn't ideal and the algorithm can ``climb out"" of it.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/4b_plot.py}
+  \captionof{listing}{Plotting the results}
+  \label{listing:slstm_4b_plot}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/4a_fit.py}
+  \captionof{listing}{Training the network}
+  \label{listing:slstm_4a_fit}
+\egroup
+
+\subsubsection{Results overview}
+
+\begin{multicols}{2}
+{\centering
+\includegraphics[width=\columnwidth]{src/stocks/lstm/one_layer_pred}\\
+\captionof{figure}{One layer network prediction}
+\label{fig:lstm_pred_one}}
+{\centering
+\includegraphics[width=\columnwidth]{src/stocks/lstm/two_layer_pred}\\
+\captionof{figure}{Two layer network prediction}
+\label{fig:lstm_pred_two}}
+\end{multicols}
+
+\begin{table}[h!]
+\centering
+\caption{LSTM networks losses}
+\begin{tabular}{ | c | c |}
+  \hline
+  One layer & Two layer \\
+  \hline
+  0.00934559645561 & 0.00476981351654 \\
+  \hline
+\end{tabular}
+\label{table:lstm}
+\end{table}
+
+Looking at the results, it is clear that the a network with two layers has proven to be more accurate than a network with one layers. It is probably due to the large amounts of data that we tried to give to the networks - having two LSTM layers has helped in detecting more intricate dependencies. Of course, the obtained results could have been improved by testing more nodes/layers combinations as well as using different preprocessing techniques. I would also recommend using PCA in the data preprocessing step to reduce the number of input dimensions if your computer can not handle this amount of columns.
+
+Also, please note how to load the model once you have it saved in the listing \ref{listing:slstm_5_results}. Once you have saved a keras model to an HDF5 file using \texttt{model.save()}, you can load it back in and be ready to make predictions by using \texttt{load\_model()}.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/lstm/5_results.py}
+  \captionof{listing}{Obtaining the final plots and losses}
+  \label{listing:slstm_5_results}
+\egroup
+
+\begin{multicols}{2}
+{\centering
+\includegraphics[width=\columnwidth]{src/stocks/lstm/one_layer}\\
+\captionof{figure}{One layer network structure}
+\label{fig:lstm_structure_one}}
+{\centering
+\includegraphics[width=\columnwidth]{src/stocks/lstm/two_layer}\\
+\captionof{figure}{Two layer network structure}
+\label{fig:lstm_structure_two}}
+\end{multicols}
+
+
 
 
 
@@ -489,96 +663,330 @@ Once we have this matrix, a question arises - how can we visualize it? In this e
 %-------------------------------------------------------------------------------
 \subsection{Project Overview}
 %-------------------------------------------------------------------------------
-\begin{easylist}
-# Goals
-## to show how to run community detection algorithms in igraph
-## to show how to plot the communities using two different methods - datashader  (larger data) and cairo (smaller data)
-## to show how to make the communities visually separable and how to incorporate node weights in the plot
-# Tools(Libraries) used
-## Why I chose igraph
-\end{easylist}
+\subsubsection{Goals}
+The goals of this project are the following:
 
-\myparagraph{Packages needed}
-\begin{easylist}
-  # igraph
-  # cairocffi
-\end{easylist}
+\begin{itemize}
+\item To show how to run community detection algorithms in igraph
+\item To show how to plot the communities using two different methods - datashader  (larger data) and igraph/cairo (smaller data)
+\item To show how to make the communities visually separable and how to incorporate node weights in the plot
+\end{itemize}
 
-\cite{csardi2006igraph}
+\subsubsection{Description}
+This project will focus on processing graph data using the igraph package for Python that is built on top of the C library with the same name \cite{csardi2006igraph} and visualizing it using datashader \cite{ref_datashader} and plotting functions that are built into igraph. The data source for this project is a graph of the YouTube social network from 2007, that was downloaded from The Koblenz Network Collection \cite{youtube_source}.
+
+In the first section I will focus on reading the obtained files and importing it in the Python environment by creating an \texttt{igraph.Graph()} object. I will also show how to detect communities in an igraph by using such algorithms as louvain\cite{blondel2011louvain} and infomap\cite{rosvall2008maps_infomap}.
+
+In the second section, I will cover visualization of the whole graph as well as a large subsection of the graph using datashader.
+
+In the third section, I will cover visualization of a smaller subsection of the graph using the plotting methods that are built into igraph.
+
+\subsubsection{Packages used}
+
+Below you can find the imports that will be used in the entire project
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/0_imports.py}
+  \captionof{listing}{Imports}
+  \label{listing:youtube_0_imports}
+\egroup
 
 %-------------------------------------------------------------------------------
 \newpage
-\subsection{Preprocessing and igraph creation}
+\subsection{Preprocessing, igraph creation and community detection}
 %-------------------------------------------------------------------------------
-\begin{easylist}
-# Importing the data form konekt
-# Optimizing edges renaming with numpy vectorize/jit
-\end{easylist}
+\myparagraph{Goal}
 
-Data source \cite{youtube_source}
+The goal of this section is to show how to load a graph from an edge list file, as well as to show how to detect communities in a graph.
 
-%-------------------------------------------------------------------------------
-\newpage
-\subsection{Community detection (igraph)}
-%-------------------------------------------------------------------------------
+\myparagraph{Pandas dataframe}
+
+The source file for this project is a file called ``out"" with no extentions. But if you read it using a text editor, you will see that it is just a regular delimited file that uses spaces as a separator and is, essentially, an edge matrix.
+
+Please note how to skip rows (there were comments in the file) and define a custom separator when reading a DataFrame using keyword arguments.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/igraph_creation/1_pandas.py}
+  \captionof{listing}{Using pandas to load the initial data source}
+  \label{listing:youtube_1_pandas}
+\egroup
+
+\myparagraph{igraph creation}
+
+igraph utilizes its own system of numbering vertices and edges - they must be sequential and start from zero. But the source file starts numbering vertices from one, and has breaks in the numbering, so, for example, vertice 17 can be followed by vertice 25 instead of vertice 18. This means, that we have to rename the vertices and edges ourselves, while maintaining the proper edge information.
+
+In the listing \ref{listing:youtube_2_igraph}, I start with creating an empty \texttt{igraph.Graph} object. Then I use a \texttt{np.ravel()} to flatten out the edge matrix, and then select unique vertice names from it using \texttt{pd.unique()} function. After obtaining this list of vertice names, I can use its length to create a continuous sequence of numbers starting with zero using \texttt{np.arange(start, end)} that will replace the vertice names. I proceed by adding that sequence to a graph by using the \texttt{add\_vertices} function.
+
+I have to map vertice numbers from the edge matrix to the new continuous list to be able to import it into igraph. First step in doing that is to use builtin \texttt{dict} and \texttt{zip} functions to create a dictionary where a vertice real name is the key and the sequential number is the value. As you can see from the listing, \texttt{zip(it1, it2)} function is very useful - it takes two iterators as an input and then outputs a iterator that returns tuples \texttt{(it1[i], it2[i])} when called an ith time. In here, I have used the \texttt{dict} function to instantly convert that tuple iterator to a disctionary. Then, I use the \texttt{np.vectorize(function)} function, that converts a function from a one that takes one element of an array as an argument to a one that takes the entire array as an argument, and executes the old function on every element of that array. I have also used a lambda expression here. A lambda expression in Python is a short-hand way to define a function that doesn't require using \texttt{def} and proper spacing. But, since it is only a short-hand after all, you can't execute more than one command using the lambda expression. Thankfully, this time we only have to look up the old vertice name in the dictionary and get the new name out of it, and a dictionary lookup only takes one command. After executing the vectorized function on the edge matrix, the result are ready to be imported into igraph, which I do by using the \texttt{add\_edges()} function.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/igraph_creation/2_igraph.py}
+  \captionof{listing}{Creating an igraph}
+  \label{listing:youtube_2_igraph}
+\egroup
+
+\myparagraph{Community detection}
+
+You can see the community detection code in the listing \ref{listing:youtube_3_communities} below. It uses the louvain algorithm to partition the initial graph, and then switches to infomap to partition the smaller one. This is done this way, because the louvain algorithm was specifically developed and optimized for large graphs, while infomap requires us to perform some computationally expensive operations like walking the graph tree to find the communities.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/igraph_creation/3_communities.py}
+  \captionof{listing}{Detecting communities}
+  \label{listing:youtube_3_communities}
+\egroup
+
 
 %-------------------------------------------------------------------------------
 \newpage
 \subsection{Plotting large graphs (datashader)}
 %-------------------------------------------------------------------------------
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subsubsection{Simple plot}
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\improvement[inline]{Add a note about how datashader failed to plot the entire graph and why it's not a good idea in the first place (hard to see the points)}
-\myparagraph{Goals}
+\subsubsection{Goals}
 
-\begin{enumerate}
+\begin{itemize}
   \item To show how you can plot regular large graphs with datashader
   \item To show how you can plot large graphs while distinguishing communities in them
-\end{enumerate}
+\end{itemize}
+
+\subsubsection{Simple plot}
+
+\myparagraph{Datashader introduction}
+
+Datashader is a package that allows the user to visualize large amounts of data. It uses a lot of different aggregation techniques in order to generate plots that, while showing a lot of data, are possible to process and show.
 
 \myparagraph{Description}
 
+In this subsection, I have decided to try and plot the whole graph of the YouTube friends netwrok using datashader. I started with defining the following plot functions: plots\_edges, plot\_vertices and plot\_full that you can see in the listing \ref{listing:youtube_plot_functions}. All of them start out by creating a \texttt{ds.Canvas} object, that will be used as a matplotlib figure by datashader - all plots, points, lines will be plotted on that canvas.
+
+As for what we will put on that canvas, Datashader works as follows: there are two types of graph functions you can call - a bundling function or a layout function. A bundling function is responsible for the edge placement, and the layout - for vertices. The bundling function is called that way, because datashader allows to aggregate edges into bundles, and we will cover that in the next subsection.
+
+For the edge plot, I expect to receive that output of the bundling function that I will then just have to pass to the \texttt{canvas.line} function in order to plot the edges. And \texttt{ds\_tf.shade} is used as a compile function - once you shade your points, they are converted to an RGBA image.
+
+
+For vertices it's the opposite - I expect to receive the output of the layout function that I can later pass to a \texttt{canvas.points} function.
+The spread function in here helps to make vertices more visible by extending every pixel occupied by a vertice by a predefined value.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/plot_functions.py}
+  \captionof{listing}{Datashader plotting functions}
+  \label{listing:youtube_plot_functions}
+\egroup
+
+In the full graph example I am using the random layout and directly connected edges bundling (in another words, no bundling at all) because when I have tried to run the bundling and a more complicated layout calculations on my data science server, it ran for three days and then just crashed. I assume that this graph was a tad too big for datashader to process.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/datashader/simple/1a_prep.py}
+  \captionof{listing}{Creating datashader layouts}
+  \label{listing:youtube_lgr_1a}
+\egroup
+
+To plot these images in this case I've used a simple \texttt{ds\_tf.Image function}, that just displays an image. I will cover how to save them to a file in a next subsection.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/datashader/simple/1b_plot.py}
+  \captionof{listing}{Plotting the whole plot using datashader}
+  \label{listing:youtube_lgr_1b}
+\egroup
+
+\myparagraph{Results}
+
+\begin{multicols}{2}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/datashader/simple/fullgraph_edges}\\
+\captionof{figure}{Edge plot of the full graph}
+\label{fig:ds_fullgraph_edges}}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/datashader/simple/fullgraph_full}\\
+\captionof{figure}{Full plot of the full graph}
+\label{fig:ds_fullgraph_full}}
+\end{multicols}
+
+As you can see, no indormation can be obtained from the above figures. And while datashader is certainly capable of plotting a huge amounts of data points, sometimes using that capability is a bad idea and only leads to dissappointing results.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Regular plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-\myparagraph{Datashader introduction}
+\myparagraph{Description}
+
+In this subsection, I will show you how to plot a quite large subgraph (26000 vertices) of the YouTube graph using datashader. I am using the communities obtained by the louvain algorithm as vertices. I will also compare different layout and bundling combinations.
+
+\myparagraph{Creating a plot list}
+
+While the last subsection's results were quite dissappointing, the plotting functions used there are correct. Since in this subsection I will be comparing a lot of different layouts and bundlings, I have decided to create a list of these plots, and then just save them using a for loop. As you can see, I started with creating a one of every layout and then created a one of every bundling for those layouts. Then, I have created a list that includes every layout/bundling combination by just calling the plot functions from inside of the list declaration.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/datashader/simple/2a_layouts.py}
+  \captionof{listing}{Creating layouts}
+  \label{listing:youtube_lgr_2a}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/datashader/simple/2b_showcase.py}
+  \captionof{listing}{Creating a list with layout combinations}
+  \label{listing:youtube_lgr_2b}
+\egroup
+
+\myparagraph{Saving the plot}
+
+In order to save the plots, I have to iterate through the previously created list of layouts and us the \texttt{export\_image} function from datashaders.utils package to save the plots. Please not, how to use it, since it is much more convenient to save images using a specialized function than by saving an image from your jupyter notebook or just a regular python output. I have also used tqdm to show the progress of saving the images.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/datashader/simple/2c_saving.py}
+  \captionof{listing}{Saving the plots}
+  \label{listing:youtube_lgr_2c}
+\egroup
 
 \myparagraph{Results}
 
-\myparagraph{Results}
-
-While datashader is certainly capable of plotting a huge amounts of data points, sometimes using that capability is a bad idea and only leads to dissappointing results.
-
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{src/youtube/datashader/simple/fullgraph}
-    \caption{Directly connected layout - Plot of the full graph}
-    \label{fig:ds_fullgraph}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.33\textwidth]{src/youtube/datashader/simple/datashader/1_1}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/1_2}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/1_3}
+    \end{subfigure}
+    \caption{Circular layout - Bundled}
+    \label{fig:ds_show_1}
 \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.33\textwidth]{src/youtube/datashader/simple/datashader/2_1}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/2_2}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/2_3}
+    \end{subfigure}
+    \caption{Circular layout - Directly connected}
+    \label{fig:ds_show_2}
+\end{figure}
+
+I would say that the circular layout overall is a quite bad way to represent large graphs, since you can't really see the connections between nodes once they are in a circle. While it may work with very small graphs, in here they are just pictures of a filled circle.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.33\textwidth]{src/youtube/datashader/simple/datashader/5_1}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/5_2}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/5_3}
+    \end{subfigure}
+    \caption{Random layout - Bundled}
+    \label{fig:ds_show_5}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.33\textwidth]{src/youtube/datashader/simple/datashader/6_1}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/6_2}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/6_3}
+    \end{subfigure}
+    \caption{Random layout - Directly connected}
+    \label{fig:ds_show_6}
+\end{figure}
+
+
+The random layout looks a bit better than the circle layout, and you can even see some of the more highly-connected vertices in the directly connected bundling. I am actually quite satisfied with the directly connected version just for this fact. And I actually think that bundling is detrimental to this plot, since all it does is hides those highly connected points of interests.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.33\textwidth]{src/youtube/datashader/simple/datashader/3_1}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/3_2}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/3_3}
+    \end{subfigure}
+    \caption{Force-directed layout - Bundled}
+    \label{fig:ds_show_3}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.33\textwidth]{src/youtube/datashader/simple/datashader/4_1}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/4_2}%
+        \hfill
+        \includegraphics[width=0.33\columnwidth]{src/youtube/datashader/simple/datashader/4_3}
+    \end{subfigure}
+    \caption{Force-directed layout - Directly connected}
+    \label{fig:ds_show_4}
+\end{figure}
+
+
+The force-directed layout (which is also known as Forced Atlas 2 \cite{bastian2009gephi}) looks the best to me in this comparison, since it clearly shows the points with the most edges directed to/from them. The only problem that I can see is that in the full plot it pushes the unconnected vertices too far away, which makes it very hard to see the graph itself.
+
+
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Plotting communities}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/datashader/communities/1_merging.py}
+  \captionof{listing}{Merging uncategorized vertices}
+  \label{listing:youtube_ds_com_1}
+\egroup
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/datashader/communities/new_communities}
+    \caption{Communities after the merge}
+    \label{fig:youtube_ds_com_merge}
+\end{figure}
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/datashader/communities/2_plotting.py}
+  \captionof{listing}{Plotting the communities}
+  \label{listing:youtube_ds_com_2}
+\egroup
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/datashader/communities/datashader_comm_nospread}
+    \caption{Plot without pixel spreading}
+    \label{fig:youtube_ds_com_nospread}
+\end{figure}
+
+In the plot with pixel spreading, one can see the nodes without any edges that encircle the main graph.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/youtube/datashader/communities/datashader_comm_spread}
+    \caption{Plot with pixel spreading}
+    \label{fig:youtube_ds_com_spread}
+\end{figure}
 
 %-------------------------------------------------------------------------------
 \newpage
-\subsection{Plotting small graphs (igraph)}
+\subsection{Plotting smaller graphs (igraph)}
 %-------------------------------------------------------------------------------
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Goals and section overview}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \myparagraph{Goals}
 
-\begin{enumerate}
+\begin{itemize}
   \item To show how to create a regular graph's plot, and consider the idea that its simplicity may make it harder to read
   \item To show how to create a graph plot with marked communities on it, and compare it to the regular plot in terms of ease of reading
   \item To show how to create a graph plot with marked communities that also shows the weight of its nodes, and compare this plot to the other two
-\end{enumerate}
+\end{itemize}
 
 \myparagraph{Description}
 
@@ -869,27 +1277,87 @@ Comparing this plot to the previous two, this one clearly presents the most info
 
 %===============================================================================
 \newpage
-\section{GEODATA ANALYSIS}
+\section{GEOGRAPHICAL ANALYSIS}
 %===============================================================================
 
-%-------------------------------------------------------------------------------
 \subsection{Project Overview}
-%-------------------------------------------------------------------------------
-\begin{easylist}
-# Goals
-## to show how to deal with geodata in python
-# Plots
-## KPI per country (Basemap)
- ## Plot - Chikago Taxi (datashader)
-\end{easylist}
 
+The goal of this project is to show how to process geographical data and plot country-level plots using world development indicators dataset as an example.
+
+%-------------------------------------------------------------------------------
+\subsection{Country indicators}
+%-------------------------------------------------------------------------------
+\subsubsection{Data loading}
+
+\myparagraph{Packages used}
+
+The listing \ref{listing:geodata_0_imports} includes all packages that you will find the packages used in the project.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/geo/map/0_imports.py}
+  \captionof{listing}{Imports}
+  \label{listing:geodata_0_imports}
+\egroup
+
+\myparagraph{Using a Sqlite database}
+
+Sqlite \cite{owens2010sqlite} is a relational database management system, that, unlike other database systems, doesn't utilize a client-server model. A Sqlite database is usually stored in a single file and can be transmitted to other people to share data. It has a downside though - it can only support one active connection at a time, so while it is popular among developers, they are often forced to switch to a more ``heavy" database when they publish their products. Thankfully, in this case it is going to be enough for this project, since it doesn't require multiple connections.
+
+In this case, I've made a connection cursor using a \texttt{sqlite3.connect(file\_path)} function, that allows me to execute SQL queries. But, instead of executing the query myself I had decided to use pandas in order to get a DataFrame as a result right away without having to convert it to one.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/geo/map/1_data_loading.py}
+  \captionof{listing}{Loading the data}
+  \label{listing:geodata_1_data_loading}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/geo/map/2_duplicate_columns.py}
+  \captionof{listing}{Removing duplicate columns}
+  \label{listing:geodata_2_duplicate_columns}
+\egroup
+
+\subsubsection{Country level visualization}
+
+This project is going to use the basemap package from matplotlib toolkits.
+To use it, you firstly have to create a Basemap object while specifying a projection that you are going to use as well as the resolution of your map (the c in the listing \ref{listing:geodata_3a_draw_plot} stands for ``crude", or the less detailed plot). Then you have to obtain a special shape file (you can download it from a website like Natural Earth Data \cite{naturalearthdata}) that contains country borders and use the \texttt{readshapefile} method in order to process it. This example is focused on country level data, so we have to use the \texttt{drawcountries} method in order to plot the country borders as well as the \texttt{drawcoastlines} to show the continent borders.
+
+Then I start a loop, in which I retrieve a value of the indicator for every country, and either color it with the corresponding shade of the color scheme or just leave it gray in case the data set didn't include this country.
+
+The legend has to be plotted on a separate axis in order to not overlap with the map, and the loop that you see after that is for showing more precise limits of the color shades. Please not the use of semi-private \texttt{\_ticker()} function in order to obtain the coordinates of the tickers.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/geo/map/3a_draw_plot.py}
+  \captionof{listing}{Drawing a map plot}
+  \label{listing:geodata_3a_draw_plot}
+\egroup
+
+The figure \ref{listing:geodata_3b_plot} shows the data preparation that executes before we call the aforementioned plot function.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/geo/map/3b_plot.py}
+  \captionof{listing}{Preparing data and plotting}
+  \label{listing:geodata_3b_plot}
+\egroup
+
+\subsubsection{Results}
+The resulting plot (figure \ref{fig:geo_map}) looks quite informative and presents data well. I'm quite surprives that in some countries there are two mobile celluear subscribtions per person, but I guess that is because of people having to use one phone for work and the second one for communicating with close friends as family.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/geo/map/plot}
+    \caption{Country level vizualization}
+    \label{fig:geo_map}
+\end{figure}
 
 %===============================================================================
 \newpage
 \section{CONCLUSION}
 %===============================================================================
 
-Include data types that we omit - biological data, food data, describe what you'd like for others to research.
+While data analysis might seem like a scary and complex area of science, you can analize data quite easily by using easy to use tools created by other people. I hope that this paper will motivate other researchers to try out their strength in data science.
+
+This work can be continued in many ways - this thesis omits how to deal with biological data, medical data, and geolocation/augmented reality data. I would also like for someone to cover different packages that can be used to explore and analyze the same data types with different tools.
 
 % Literature references
 \newpage

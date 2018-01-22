@@ -1,3 +1,4 @@
+%!TeX spellcheck = en-US
 % Using a4paper and 12pt font by default
 \documentclass[12pt, a4paper]{article}
 
@@ -7,11 +8,17 @@
 % Use more than one optional parameter in a new commands
 \usepackage{xargs}
 
-% Coloured text etc.
+% Colored text etc.
 \usepackage[pdftex,dvipsnames]{xcolor}
+
+% Quotation marks
+\usepackage[utf8]{inputenc}
 
 % Pictures and /includegraphics
 \usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{float}
+
 % Links in the table of contents + other stuff
 \usepackage[hidelinks, linktoc=all]{hyperref}
 
@@ -36,7 +43,7 @@
 % Captions
 \usepackage{caption}
 
-% Todo notes
+% To-do notes
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 \newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
@@ -46,8 +53,6 @@
 % Code highlighting
 \usepackage{minted}
 \usemintedstyle{tango}
-\newcommandx{\listcode}[2][1=]{\bgroup\inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{#1}\captionof{listing}{#2}\egroup}
-\newcommandx{\listcodecont}[2][1=]{\bgroup\inputminted[linenos, breaklines=true, fontsize=\scriptsize,firstnumber=last]{python}{#1}\captionof{listing}{#2}\egroup}
 
 % New line after paragraph title
 \newcommandx{\myparagraph}[1]{\paragraph{#1}\mbox{}}
@@ -65,6 +70,31 @@
     \OldEndEasylist%
 }%
 
+% Listing & picture counter
+\usepackage{chngcntr}
+\counterwithin{listing}{section}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+% Hyphenation rules, etc.
+\usepackage{csquotes}
+\usepackage[british]{babel}
+
+% Unbold the subsubsection and paragraph
+\usepackage{titlesec}
+
+\titleformat*{\subsubsection}{\normalfont\fontsize{13pt}{13pt}\selectfont}
+\titleformat*{\paragraph}{\normalfont\itshape}
+
+% Paragraph numbers
+% \setcounter{secnumdepth}{4}
+
+% Bibliography
+\usepackage[backend=biber, giveninits=true, natbib=true, style=numeric, sorting=nty]{biblatex}
+\addbibresource{references.bib}
+
+\DeclareNameAlias{sortname}{family-given}
+\DeclareNameAlias{default}{family-given}
 
 \begin{document}
 
@@ -117,7 +147,7 @@
 %-------------------------------------------------------------------------------
 \subsection{Goals of the Research}
 %-------------------------------------------------------------------------------
- In the modern world, big data and machine learning are becoming more and more prominent as companies such as Facebook, Google and Amazon gather and analyze all sorts of data from their users. But which tools are they using to do it?
+In the modern world, big data and machine learning are becoming more and more prominent as companies such as Facebook, Google and Amazon gather and analyze all sorts of data from their users. But which tools are they using to do it?
 
 Right now, the two main languages in data science are \mintinline{python}{Python} and \mintinline{python}{R}, while \mintinline{python}{Matlab} is also quite popular despite only being used in the academic environment.
 
@@ -138,34 +168,271 @@ Lastly, the fourth part will contain conclusions.
 
 %===============================================================================
 \newpage
-\section{TABULAR DATA ANALYSIS}
+\section{TIME SERIES DATA ANALYSIS}
 %===============================================================================
 %-------------------------------------------------------------------------------
 \subsection{Project Overview}
 %-------------------------------------------------------------------------------
-\begin{easylist}
-# Goals
-## Describe the project
-# Obtaining the data (pandas-datareader)
-# Traditional stock visualizations (matplotlib)
-# Stock correlation matrix (matplotlib)
-# LSTM training (keras)
-\end{easylist}
+
+\subsubsection{Goals}
+
+\begin{itemize}
+	\item To show how to use python to obtain stock price data
+	\item To show how to visualize the aforementioned data in different ways
+	\item To show how to predict future prices by using a LSTM neural network
+\end{itemize}
+
+\subsubsection{Description}
+
+This project will focus on dealing with time series data, which will be represented by the stock price data. It will contain four sections.
+
+In the first one, I will show how to use the pandas-datareader package to download stocks traded on the New York Stock Exchange (NYSE) from the yahoo! finance website and merge them into one comma separated file.
+
+In the second section, I will cover simple visualizations of singular stocks using the matplotlib package, which will include moving average and candlestick plots.
+
+In the third section, I will cover visualization of a stock correlation matrix, which will, as opposed to the simple plots, include all of the stocks that were downloaded and not only one of them.
+
+In the fourth and final section, I will demonstrate how to make a LSTM neural network for predicting the stock prices using the keras package and how to plot the predictions it generates, as well as cover how to use the pickle package to serialize python objects.
+
 
 %-------------------------------------------------------------------------------
 \newpage
 \subsection{Data gathering (pandas-datareader)}
 %-------------------------------------------------------------------------------
 
+\myparagraph{Goal}
+
+The goal of this section is to show how to use python to obtain stock price data, and transform it for further use.
+
+\myparagraph{Process description}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/stocks/etl/stocks_download_chart}
+    \caption{Stocks download flowchart}
+    \label{fig:stocks_download_chart}
+\end{figure}
+
+As you can see on the figure \ref{fig:stocks_download_chart}, the download process can only begins after you have specified the tickers, or short names of the companies that you want to download the data for.
+
+There are a couple of methods to obtain a list of tickers that you want to analyze: you could go through the companies that interest you and look up the ticker for every one of them, you could use a package called BeautifulSoup to obtain the tickers by scraping a webpage, or, if you are dealing with all of the stocks traded on a particular market (like we are here with NYSE), the official webpage for that market usually provides such a list. In this case, I have downloaded a list of all tickers from NYSE from the official NASDAQ website \cite{nasdaq_companylist} and saved the ticker column from the provided file  manually.
+
+It is possible to just go trough them one by one and call the download function for every ticker, but that approach may be detrimental due to the fact that sometimes yahoo finance’s API  just outright refuses the pandas-datareader’s connection attempts, probably due to a large number of requests from one IP address.
+
+Due to this inconsistency, we have to incorporate some fail-saves into the code, like checking whether the download was completed successfully and repeating it if something went wrong. The timeout between tries is also introduced here to avoid stressing the yahoo servers too much, and to avoid being flagged as a malicious user.
+
+After a stock is processed this way, we save the data if we have successfully downloaded it, and go to the next stock in the list. While this approach doesn’t guarantee that 100\% of the stocks will get downloaded, it protects us from being stuck in an infinite loop due to yahoo finance not having a data for a certain stock.
+
+\myparagraph{Used packages}
+
+Below you will find packages that will be used in this section of the project.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/0a_imports.py}
+  \captionof{listing}{Imports}
+  \label{listing:setl_0a_imports}
+\egroup
+
+
+\myparagraph{Tqdm}
+
+Please pay attention to the use of the tqdm package in the listing \ref{listing:setl_1_download}. It is a very useful package that allows you to create progress bars that work in both console and jupyter notebooks, and help with determining how much time is left in a long process, or how many things we have already processed. To use it, you can just change \texttt{for i in iterable} to \texttt{for i in tqdm(iterable)}. And if you want to use it in while loops, you can create a tqdm object yourself and manually update it, as is is shown in the listing.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/stocks/etl/1_download.py}
+  \captionof{listing}{Downloading the stocks data}
+  \label{listing:setl_1_download}
+\egroup
+
+\myparagraph{Data Transformation}
+
+After downloading the stocks, we are left with a lot of files, where every file represents the data for a single stock. And this is a problem if we want to run some computations that involve every stock, since then we would need to loop through all the individual files in order to achieve that. That’s why in this subsection I’ll show how to merge all those files in one CSV file.
+
+There are a couple of ways to accomplish this, but the one I find the most useful is to make numpy arrays out of the files, and then use the \texttt{np.concatenate} function to merge them. It is even possible to convert the resulting numpy array to a dataframe afterwards.
+
+But there is one problem with this method. In order to  concatenate two numpy arrays, they must have the same number of rows (or columns, depending on which axis you are using to concatenate the arrays). And even though we have specified that we want data in a time period between 2000 and 2017, not every stock will actually have those dates in their CSV file. Since if a company had their IPO\footnote{Initial Public Offering - the first time that the company can be traded} after 2000, their file will start with the date that the stock could be traded.
+
+In order to merge the files despite this, it is necessary to first go through every file list and make sure that they have the same number of rows inside, even if some of those rows are null. In order to do this, we can handpick one file to serve as an example, and then assign that file’s index to every other file. You can observe this process in listing \ref{listing:setl_2c_reindex}.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/2b_timearr.py}
+  \captionof{listing}{Extracting a time array (index) from a file}
+  \label{listing:setl_2b_timearr}
+\egroup
+
+You can see a usage of generators in the listing \ref{listing:setl_2a_listcsv}. A generator can usually be distinguished by the use of the \texttt{yield} keyword, and is essentially a function that is treated as an iterable. If a you have a function that generates large amounts of data, your program can benefit drastically from using generators, since everything is generated on the fly and you don't have to store the whole resulting list in memory.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/2a_listcsv.py}
+  \captionof{listing}{Listing all csv files in a directory}
+  \label{listing:setl_2a_listcsv}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/2c_reindex.py}
+  \captionof{listing}{Reindexing the files for future concatenation}
+  \label{listing:setl_2c_reindex}
+\egroup
+
+One other problem that arises with merging the files is how to deal with columns being called the same way in every file. In this example, I have decided to solve it by appending the company name to every column, so we can still access data from a specific company in the future.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/2d_merge.py}
+  \captionof{listing}{Merging the singular stock files}
+  \label{listing:setl_2d_merge}
+\egroup
+
+A correlation matrix serves as a way to store relationships between stocks, and will be covered later in the section \ref{ssec:stock_corr}.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/2f_corr.py}
+  \captionof{listing}{Creating a correlation matrix}
+  \label{listing:setl_2f_corr}
+\egroup
+
+
+\myparagraph{Summary}
+
+-execute the functions-
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/etl/3_executing.py}
+  \captionof{listing}{Executing the functions}
+  \label{listing:setl_3}
+\egroup
+
 %-------------------------------------------------------------------------------
 \newpage
 \subsection{Traditional stock visualizations (matplotlib)}
 %-------------------------------------------------------------------------------
 
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, ]{python}{src/stocks/simple/1_get_data.py}
+  \captionof{listing}{Reading the data into the memory}
+  \label{listing:ssimp_1}
+\egroup
+
+\subsubsection{Basic plot}
+
+A basic plot of one stock can be plotted without having to resort to creating your own figures in matplotlib, since a pandas DataFrame has a built-in plot function.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/simple/2_onestock.py}
+  \captionof{listing}{Very basic plot of a stock}
+  \label{listing:ssimp_2}
+\egroup
+
+\begin{multicols}{2}
+{\centering
+\includegraphics[width=\columnwidth]{src/stocks/simple/oneplot}\\
+\captionof{figure}{Basic plot}
+\label{fig:stock_oneplot}}
+{\centering
+\includegraphics[width=\columnwidth]{src/stocks/simple/oneplot_zoom}\\
+\captionof{figure}{Basic plot - zoomed}
+\label{fig:stock_oneplot_zoom}}
+\end{multicols}
+
+\subsubsection{Moving average plot}
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/simple/3_moving_avg.py}
+  \captionof{listing}{Moving average plot}
+  \label{listing:ssimp_3}
+\egroup
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{src/stocks/simple/movingavg}
+    \caption{Moving average plot}
+    \label{fig:stock_movingavg}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{src/stocks/simple/movingavg_zoom}
+    \caption{Moving average plot - zoomed}
+    \label{fig:stock_movingavg_zoom}
+\end{figure}
+
+\subsubsection{Candlestick plot}
+
+A candlestick plot is a way to visualize aggregated stock data that has originated in Japan and was popularized in the west by Steve Nison \cite{candlestick}. It employs a structure that is similar to box plots to show the stock’s opening, close, high and low prices for a specific time period - usually a day or a week. Usually, a entry for one day (or week, month, etc.) consists of the following: (1) a box, showing opening and close prices and (2) lines, or “shadows”, that show the high and low prices (you can see those on figure \ref{fig:stock_candlestick_zoom}). This, in combination with changing the color of the box to show whether the stock has gone up or down in price to create this plotting technique. Candlestick plotting is also often combined with a volume plot that shows how much trading was done in that time period (on the bottom in the example).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/stocks/simple/candlestick_zoom}
+    \caption{Candlestick plot - zoomed}
+    \label{fig:stock_candlestick_zoom}
+\end{figure}
+
+The pandas package has some support for the candlestick plots, which, as you can see in the listing \ref{listing:ssimp_4_candle}, can be very useful when trying to create such plots by yourself.  You can use functions like \texttt{df[column].resample('time\_period')} to resample your data and then pair it with \texttt{df.ohlc()} to extract the open/high/low/close values from that aggregation. This, paired with \texttt{candlestick\_ohlc} function from \texttt{matplotlib.finance} module allows you to create candlestick plots rather quickly.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/simple/4_candlestick.py}
+  \captionof{listing}{Candlestick chart}
+  \label{listing:ssimp_4_candle}
+\egroup
+
+As you can see in the figures \ref{fig:stock_candlestick_zoom} above and \ref{fig:stock_candlestick} below, the resulting plot is interactive and allows for the user to zoom in and only view the time period that they are interested in.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{src/stocks/simple/candlestick}
+    \caption{Candlestick plot}
+    \label{fig:stock_candlestick}
+\end{figure}
+
+
 %-------------------------------------------------------------------------------
 \newpage
-\subsection{Stock correlation matrix visualization (matplotlib)}
+\subsection{Stock correlation matrix visualization (matplotlib)} \label{ssec:stock_corr}
 %-------------------------------------------------------------------------------
+
+A correlation between two stock prices shows, whether a rise in price of one stock correlates with a rise or fall in price of another stock, or whether two stocks are completely independent.
+
+A logical, albeit a bit inefficient, way to store correlation between a certain number of stocks is to create a so-called correlation matrix, whose structure you can see in table \ref{table:corr}.
+
+Research like \cite{kwapien2006bulk} suggests that correlation matrix may contain useful information about the stock market, which makes it into a metric that can be used by stock investors that would like to diversify their investment portfolio as much as possible, thus ensuring that if one of the stocks they have invested in drops in price, the other ones remain stable.
+
+\begin{table}[h!]
+\centering
+\caption{Correlation matrix structure}
+\begin{tabular}{ | c | c | c | c | }
+  \hline
+  \ & Stock1 & Stock2 & Stock3 \\
+  \hline
+  Stock1 & 1 & corr(Stock1, Stock2) & corr(Stock1, Stock3) \\
+  \hline
+  Stock2 & corr(Stock2, Stock1) & 1 & corr(Stock2, Stock3) \\
+  \hline
+  Stock3 & corr(Stock3, Stock1) & corr(Stock3, Stock2) & 1 \\
+  \hline
+\end{tabular}
+\label{table:corr}
+\end{table}
+
+Once we have this matrix, a question arises - how can we visualize it? In this example visualization, I'll use a heat map chart, because of how the correlation numbers can be treated as colors.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/stocks/corr/1_get_data.py}
+  \captionof{listing}{Reading the data into the memory}
+  \label{listing:scorr_1}
+\egroup
+
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/corr/2_problem_labels.py}
+  \captionof{listing}{First attempt at making a correlation matrix}
+  \label{listing:scorr_2}
+\egroup
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/stocks/corr/3_fix.py}
+  \captionof{listing}{Fixing the labelling}
+  \label{listing:scorr_3}
+\egroup
 
 %-------------------------------------------------------------------------------
 \newpage
@@ -185,7 +452,7 @@ Lastly, the fourth part will contain conclusions.
 # Goals
 ## to show how to run community detection algorithms in igraph
 ## to show how to plot the communities using two different methods - datashader  (larger data) and cairo (smaller data)
-## to show how to make the communities visually separatable and how to incorporate node weights in the plot
+## to show how to make the communities visually separable and how to incorporate node weights in the plot
 # Tools(Libraries) used
 ## Why I chose igraph
 \end{easylist}
@@ -196,6 +463,8 @@ Lastly, the fourth part will contain conclusions.
   # cairocffi
 \end{easylist}
 
+\cite{csardi2006igraph}
+
 %-------------------------------------------------------------------------------
 \newpage
 \subsection{Preprocessing and igraph creation}
@@ -204,6 +473,8 @@ Lastly, the fourth part will contain conclusions.
 # Importing the data form konekt
 # Optimizing edges renaming with numpy vectorize/jit
 \end{easylist}
+
+Data source \cite{youtube_source}
 
 %-------------------------------------------------------------------------------
 \newpage
@@ -270,7 +541,7 @@ While datashader is certainly capable of plotting a huge amounts of data points,
 
 \myparagraph{Description}
 
-In this section, I will show you how to plot a smaller (around 1000 nodes) portion of our graph using tools that are supported by igraph, in particular using its bindings to a C library called \improvement{citation needed} cairo. Since it is originally written in C and only provides an API that other languages can use, we will also have to use a package that will be able to connect python code to the C library itself. In this example, I'm using cairocffi as such package, hence the inclusion of \texttt{import cairocffi as cairo} in the starting import list. We have to import it as cairo, because otherwise igraph will attempt to use a different binding package, \texttt{pycairo}, which is quite outdated and can outright refuse to save vector images.
+In this section, I will show you how to plot a smaller (around 1000 nodes) portion of our graph using tools that are supported by igraph, in particular using its bindings to a C library called cairo. Since it is originally written in C and only provides an API that other languages can use, we will also have to use a package that will be able to connect python code to the C library itself. In this example, I'm using cairocffi as such package, hence the inclusion of \texttt{import cairocffi as cairo} in the starting import list. We have to import it as cairo, because otherwise igraph will attempt to use a different binding package, \texttt{pycairo}, which is quite outdated and can outright refuse to save vector images.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsubsection{Regular plot}
@@ -304,11 +575,15 @@ The select method has 8 special keyword arguments:
 
 Please note, that you have to include the name of your property before the special keyword: \texttt{graph.vs.select(age\_in=[19,20,21])}. You can see how I have used \texttt{gt} in the following example. The \texttt{\_degree} you see in front of it is a semi-private variable (since no variable is truly private in python) that keeps track of the degree of the vertex.
 
-\listcode[src/youtube/hdg/1_selecting.py]{Selecting nodes for the subgraph}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/hdg/1_selecting.py}
+  \captionof{listing}{Selecting nodes for the subgraph}
+  \label{listing:iplot_1sel}
+\egroup
 
 \myparagraph{Styling the resulting plot}
 
-There are many different options to choose from if you want to change how the graph appears on the screen. They are originally available as keyword arguments that you can pass to the \texttt{ig.plot()} function, but I advocate for putting all of those kwargs in a separate dictionary, \improvement{move save\_fname to the dictionary too} since it takes away from the dissaray of having to include many options into one function call.
+There are many different options to choose from if you want to change how the graph appears on the screen. They are originally available as keyword arguments that you can pass to the \texttt{ig.plot()} function, but I advocate for putting all of them in a separate dictionary, since it takes away from the dissaray of having to include many options into one function call.
 
 In this paper I will mainly focus on the layout option, as well as gloss over a couple of settings connected to the size of the vertices and edges, but if after reading this you will want to learn more about them, you can call \texttt{help(ig.plot)} while in a python interpreter to see the function's docstring.
 
@@ -319,54 +594,81 @@ One of the most important arguments provided to us is the layout one, since it c
   \item Circle layout
   \item Star layout
   \item Grid layout
-  \item Fruchterman Reingold layout
+  \item Fruchterman Reingold layout \cite{yt_layout_fg}
   \item Fruchterman Reingold grid layout
-  \item DrL layout
-  \item Graphopt layout
-  \item Kamada Kawai layout
-  \item Sugiyama layout
+  \item DrL layout \cite{yt_layout_dl}
+  \item Graphopt layout \cite{yt_layout_graphopt}
+  \item Kamada Kawai layout \cite{yt_layout_kk}
+  \item Sugiyama layout \cite{yt_layout_sg}
   \item Random layout
   \item Large Graph layout
-  \item Reingold Tilford layout (for trees)
+  \item Reingold Tilford layout (for trees) \cite{yt_layout_ft}
   \item Bipartite layour (for 2-layer graphs)
   \end{itemize}
 \end{multicols}
 
-As you can see in the listing, other options are responsible for things like edge width, vertex size and shape, where to save the file, et cetera. The \texttt{bbox} argument is responsible for how big your final plot is going to be (in another words, it is declaring a limiting box on a figure that no vertex can cross). The \texttt{target} keyword argument is also very useful - it specifies the name of the file that your final chart will be stored in, and supports multiple file extentions (PDF, SVG, PNG).  In the next section I will also explain you how to add a color palette to the dictionary in order to distinguish the communities that we will detect.
 
-\listcodecont[src/youtube/hdg/2_style_dict.py]{Creating a style dictionary}
+As you can see in the listing, other options are responsible for things like edge width, vertex size and shape, where to save the file, et cetera.
+
+The \texttt{bbox} argument is responsible for how big your final plot is going to be (in another words, it is declaring a limiting box on a figure that no vertex can cross).
+
+The \texttt{target} keyword argument is also very useful - it specifies the name of the file that your final chart will be stored in, and supports multiple file extentions (PDF, SVG, PNG).  In the next section I will also explain you how to add a color palette to the dictionary in order to distinguish the communities that we will detect.
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg/2_style_dict.py}
+  \captionof{listing}{Creating a style dictionary}
+  \label{listing:iplot_2sd}
+\egroup
 
 \myparagraph{Plotting and saving the resulting plot to a file}
 
-Since we have already constructed the keyword argument dictionary for the plot function, the rest becomes very clean and easy - just pass it to the function while remembering to unroll it to convert it to key-value pairs.
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg/3_plotting.py}
+  \captionof{listing}{Plotting the image}
+  \label{listing:iplot_3im}
+\egroup
 
-\listcodecont[src/youtube/hdg/3_plotting.py]{Plotting the image}
+Since we have already constructed the keyword argument dictionary for the plot function, the rest becomes very clean and easy - we just have to pass the dictionary to the function while remembering to unroll it to convert it to key-value pairs.
 
-\begin{figure}[hb]
-    \centering
-    \includegraphics[width=\textwidth]{src/youtube/hdg/hdg_simple}
-    \caption{Regular plot (Fruchterman Reingold layout)}
-    \label{fig:hdg_simple}
-\end{figure}
+\myparagraph{Layout comparison and revision of the results}
 
-\myparagraph{Reviewing the results}
-
-While igraph makes it quite easy to plot regular plots like these, they don't provide one with much insight into the data itself. While you could look at the picture made using the Fruchterman-Reingold layout, and detect two major communities in the network with a naked eye, other layouts aren't as simple to read. Furthermore, most of them look just black balls and are quite chaotic, which is a pretty large problem when dealing with plotting graphs.
-
-Also, I'd like to note that while I would love to include the large graph layout in the following comparison, igraph (if its current version) refuses to draw anything when I use it.
-
-
+All of the plots generated in this section use the aforementioned style dictionary, while only changing the \texttt{['layout']} part of it.
 
 \begin{multicols}{2}
-  {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/1_plot_crc}\\
-  \captionof{figure}{Circular layout}
-  \label{fig:hdg_c1}}
-  {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/2_plot_str}\\
-  \captionof{figure}{Star layout}
-  \label{fig:hdg_c2}}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/hdg/comp/1_plot_crc}\\
+\captionof{figure}{Circular layout}
+\label{fig:hdg_c1}}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/hdg/comp/2_plot_str}\\
+\captionof{figure}{Star layout}
+\label{fig:hdg_c2}}
 \end{multicols}
+
+Circular layout puts all vertices on a circle and then draws the edges between them, while the star layout puts one of the vertices in the middle an tries to center the plot around it. As you can see from the above figures, in this case they are almost non-distinguishable, and don't show any insights about the graph.
+
+\begin{multicols}{2}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/hdg/hdg_simple}
+\captionof{figure}{Fruchterman Reingold layout}
+\label{fig:hdg_simple}}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/hdg/comp/5_plot_kk}\\
+\captionof{figure}{Kamada Kawai layout}
+\label{fig:hdg_c5}}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/hdg/comp/7_plot_drl}\\
+\captionof{figure}{DrL layout}
+\label{fig:hdg_c7}}
+{\centering
+\includegraphics[width=\columnwidth]{src/youtube/hdg/comp/6_plot_ghopt}\\
+\captionof{figure}{Graphopt layout}
+\label{fig:hdg_c6}}
+\end{multicols}
+
+Force-directed algorithms like Fruchterman Reingold, Kamada Kawai, Graphopt and DrL  all use physics simulations to generate a plot. In this case, it led to Kamada Kawai and Graphopt making a plot that is mostly centered around one point, while Fruchterman Reingold and DrL layouts drew the graph by using two centers, thus highlighting two major communities within it. Unfortunately, DrL layout also spread the vertices too far away from each other, making the whole plot seem like a regular line.
+
+Grid layouts put the vertices on an imaginary mesh, and then draw the connections between them. They can be useful for smaller graphs, but as you can see from the figures below, one can hardly infer any information from these if the amount of points is large enough.
 
 \begin{multicols}{2}
   {\centering
@@ -379,42 +681,33 @@ Also, I'd like to note that while I would love to include the large graph layout
   \label{fig:hdg_c4}}
 \end{multicols}
 
-\begin{multicols}{2}
-  {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/5_plot_kk}\\
-  \captionof{figure}{Kamada Kawai layout}
-  \label{fig:hdg_c5}}
-  {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/6_plot_ghopt}\\
-  \captionof{figure}{Ghopt layout}
-  \label{fig:hdg_c6}}
-\end{multicols}
+Random layout, as its name suggests, places vertices on random points in the plot and then proceeds to draw the edges between them. Sugiyama layout tries to put vertices on different rows of the plot while directing their edges downwards, and is most suited for trees and not a social network graph like the one in this example.
 
 \begin{multicols}{2}
-  {\centering
-  \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/7_plot_drl}\\
-  \captionof{figure}{DrL layout}
-  \label{fig:hdg_c7}}
   {\centering
   \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/8_plot_random}\\
   \captionof{figure}{Random layout}
   \label{fig:hdg_c8}}
-\end{multicols}
-
   {\centering
   \includegraphics[width=\columnwidth]{src/youtube/hdg/comp/9_plot_sgy}
   \captionof{figure}{Sugiyama layout}
   \label{fig:hdg_c9}}
+\end{multicols}
+
+While igraph makes it quite easy to make regular plots like these, they don't provide one with much insight into the data itself. Even though you could look at the picture made using the Fruchterman Reingold layout, and detect two major communities in the network with a naked eye, other layouts aren't as simple to read. Still, I find that force-directed layouts like Fruchterman Reingold represented the social network graph better than other layouts.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\newpage
 \subsubsection{Community plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \myparagraph{Clustering the subgraph}
 
 The size of the subgraph we're clustering is smaller than the one used in the datashader example, so using infomap right away without needing to cluster it with the louvain algorithm in advance is reasonable. In here I'm also storing the node's membership list into a variable, because we will need it later to color edges.
 
-\listcode[src/youtube/hdg_com/1_clustering.py]{Using infomap to cluster the subgraph}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/hdg_com/1_clustering.py}
+  \captionof{listing}{Using infomap to cluster the subgraph}
+  \label{listing:iplot_1cl}
+\egroup
 
 \myparagraph{Making communities visible}
 
@@ -424,15 +717,27 @@ In this example, I have decided to color all vertices within a community and edg
 
 As for colors, since the number of communities changed whenever I ran the infomap algorithm, I have decided to go with a randomized approach and just generate a random color for each community using a list comprehension and the \texttt{random.randint(min, max)} function that would give me a color-representing number that then would be converted to hex using the \texttt{06x} string format.
 
-\listcodecont[src/youtube/hdg_com/2_initializing_colors.py]{Initializing color and weight lists}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_com/2_initializing_colors.py}
+  \captionof{listing}{Initializing color and weight lists}
+  \label{listing:iplot_2ic}
+\egroup
 \ \\
 To assign color to a vertice in igraph, you can just add an attribute \textquotedblleft color\textquotedblright to the vertex, and igraph with cairo will fill that vetice with that color if it is in the pallette that you have to assign in the keyword argument (or style) dictionary. The enumerate function adds an id to the every member of an iterable that you pass into it, so I used it to get access to the community ID numbers, since the \texttt{comm}  variable is just a list of vertices. Then I proceeded to iterate through every vertice and assign a matching color to them.\\
 
-\listcodecont[src/youtube/hdg_com/3_colors_looping_vert.py]{Assigning color to vertices}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_com/3_colors_looping_vert.py}
+  \captionof{listing}{Assigning color to vertices}
+  \label{listing:iplot_3cl}
+\egroup
 \ \\
 I did a very similar thing to the edges, except this time I have checked whether both of their ends are in one community and assigned different color and weights based on that.
 
-\listcodecont[src/youtube/hdg_com/4_colors_looping_edge.py]{Assigning color to edges}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_com/4_colors_looping_edge.py}
+  \captionof{listing}{Assigning color to edges}
+  \label{listing:iplot_3ce}
+\egroup
 
 \myparagraph{Styling the resulting plot}
 
@@ -440,57 +745,78 @@ In order for igraph to be able to use a color, it has to be in it's palette. You
 
 One more new thing in this code listing is the \texttt{edge\_order\_by} argument, and it is quite important for this example, since it determines the order that the edges are drawn in. So, if we order them by weight that means that the the gray edges between communities that have lighter weights will be drawn first, and the heavier and more colorful edges inside of the communities will be drawn on top of them.
 
-\listcodecont[src/youtube/hdg_com/5_styling_prop.py]{Styling using graph properties}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_com/5_styling_prop.py}
+  \captionof{listing}{Styling using graph properties}
+  \label{listing:iplot_5sg}
+\egroup
 
-\listcodecont[src/youtube/hdg_com/6_style_dict.py]{Styling using a style dict}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_com/6_style_dict.py}
+  \captionof{listing}{Styling using a style dict}
+  \label{listing:iplot_6sd}
+\egroup
 
 \myparagraph{Plotting and reviewing the results}
 
-\listcodecont[src/youtube/hdg_com/7_plotting.py]{Saving the plot to a file}
+As you can see from the listing below, the plotting code didn't change from the last section, because all variable arguments have been placed in the style dictionary.
 
-Looking at this plot, I find that the clear separation between groups and their coloring makes them easier to distinguish from each other. And while the delineated plot can be less pretty for some people, it separates the communities even more than the regular coloring does, and adds boundaries that make even smallest groups of 2-3 vertices visible due to the bold lines connecting them. The problem with that plot is that the boundaries that separate the groups are drawn first, which makes them being crossed over by the edges that connect different communities. While that thing can be changed by inheriting from some parts \improvement{insert accurate data here} of the cairo library and rewriting them, I can't help but think that it's done intentially, just so you could actually see the edges that connect the communities.
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_com/7_plotting.py}
+  \captionof{listing}{Saving the plot to a file}
+  \label{listing:iplot_7sv}
+\egroup
 
-Anyway, adding some kind of order with the groups and colors is in my mind an improvement compared to the seemingly random balls of black lines that were generated in the last section.
-
-Some could also argue that some of the colors aren't mixed well, to which I can only respond by reccomending others to select colors they would like to see on a plot.\improvement{Change the color from random to a normal list?}
-
-\begin{figure}[p]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{src/youtube/hdg_com/hdg_com}
     \caption{Community plot - Fruchterman Reingold layout}
     \label{fig:hdg_com}
 \end{figure}
 
-\begin{figure}[p]
+Looking at this plot, I find that the clear separation between groups and their coloring makes them easier to distinguish from each other, even if the groups could be made more prominent by changing their colors or increasing the edge thickness.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{src/youtube/hdg_com/hdg_com_marked}
     \caption{Community plot - delineated groups - Fruchterman Reingold layout}
     \label{fig:hdg_com_marked}
 \end{figure}
 
+The delineated plot separates the communities even more than the regular coloring does, and adds boundaries that make even smallest groups of 2-3 vertices visible due to the bold lines connecting them. The problem with this plot is that the boundaries that separate the groups are drawn first, which makes them being crossed over by the edges that connect different communities. While that could be changed, the way of doing that would have to be very roundabout due to the delineation itself being just a true or false check in the plot function. I think that it may have been done intentially, just so you could actually see the edges properly.
+
+To sum up, adding some kind of order with the groups and colors is, in my mind, a major improvement compared to the plots that were generated in the last section.
+
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\newpage
 \subsubsection{Weighted community plot}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \myparagraph{Pagerank application}
 
-Pagerank \improvement{cite} is an algorithm developed by google. It uses a number of links to a specific vertex (originally a webpage) to evaluate their importance. This metric is used as the weight of the vertices in this example. The pagerank implementation in the igraph package already auto assigns the weight, so you don't have to do that yourself.
+Pagerank\cite{pagerank} is an algorithm developed by, among others, Larry Page and Sergey Brin that was used as a basis for the Google search engine. It uses a number of links to a specific vertex (originally, a webpage) to evaluate their importance. This metric is used as the weight of the vertices in this example. The pagerank implementation in the igraph package already auto assigns the weight, so you don't have to do that yourself.
 
-\listcode[src/youtube/hdg_weighted/1_pagerank.py]{Using pagerank to assign weights to vertices}
+
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize]{python}{src/youtube/hdg_weighted/1_pagerank.py}
+  \captionof{listing}{Using pagerank to assign weights to vertices}
+  \label{listing:iplot_1pg}
+\egroup
 
 \myparagraph{Style dictionary}
 
 Style dictionary for the weighted graph is very similar to the one that was used to create the community plot, with an additions of weights as a keyword argument to pass to the fruchterman reingold layout and vertice size now depending on it's weight instead of being constant. As you can see from the code listing, the \texttt{vertex\_size} requires either a constant number or a iterable of all vertices' weights.
 
-\listcodecont[src/youtube/hdg_weighted/2_style_dict.py]{Styling using a style dict}
+\bgroup
+  \inputminted[linenos, breaklines=true, fontsize=\scriptsize, firstnumber=last]{python}{src/youtube/hdg_weighted/2_style_dict.py}
+  \captionof{listing}{Styling using a style dict}
+  \label{listing:iplot_32sd}
+\egroup
 
 %
 \myparagraph{Plotting and reviewing results}
 
-\listcodecont[src/youtube/hdg_weighted/3_plotting.py]{Saving the plot to a file}
+The plot function call in this case is the same as in two previous ones - \texttt{ig.plot(hdg\_subgraph, **hdg\_style)}.
 
-Comparing this plot to the previous two, this clearly presents the most information out of the three. If in the first section we had to only deal with the vertices and edges themselves, now we not only have communities of vertices that should be grouped, we also have different sizes of vertices inside those communities. While pagerank is an algorithm that always values nodes with more connection higher, thus making the violet community the most prominent group, if this chart was made using a different data set it could reveal something like the least populated community being the most important or something among those lines.
-
+Comparing this plot to the previous two, this one clearly presents the most information out of the three. If in the first section we had to only deal with the vertices and edges themselves, now we not only have communities of vertices that should be grouped, we also have different sizes of vertices inside those communities. While pagerank is an algorithm that always values nodes with more connection higher, thus making the violet community the most prominent group, if this chart was made using a different data set it could reveal something like the least populated community being the most important or something among those lines.
 
 \begin{figure}
     \centering
@@ -498,14 +824,6 @@ Comparing this plot to the previous two, this clearly presents the most informat
     \caption{Weighted plot - Fruchterman Reingold layout}
     \label{fig:hdg_pg_fg}
 \end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{src/youtube/hdg_weighted/hdg_pg_kawai}
-    \caption{Weighted plot - Kamada Kawai layout}
-    \label{fig:hdg_pg_kawai}
-\end{figure}
-
 
 
 %===============================================================================
@@ -534,8 +852,7 @@ Include data types that we omit - biological data, food data, describe what you'
 
 % Literature references
 \newpage
-\nocite{*}
-\bibliographystyle{unsrt}
-\bibliography{references}
+
+\printbibliography
 
 \end{document}

@@ -1,25 +1,33 @@
-# Getting the data for a particular year
-df_plot = df[(df['Year'] == year) & (df['Region'] != '')]
-df_plot = df_plot.iloc[:, [0, 1, -1]]
+def plot(year, title, legend_title, ind='IT.CEL.SETS.P2', show_values_inside=False):
+    # Customizing the data connection to be able to retrieve different indicators
+    con = sqlite3.connect(os.path.join(get_root(), 'wdi', 'database.sqlite'))
 
-if (df_plot['Value'].max() <= 0):
-    raise Exception('No data to plot')
+    df = pd.read_sql_query(
+        'SELECT * FROM Country c '
+        'INNER JOIN Indicators i ON c.CountryCode = i.CountryCode '
+        f'WHERE i.IndicatorCode="{ind}"', con)
 
-# Normalizing the data to show percentages
-norm_min = df_plot['Value'].min()
-norm_max = df_plot['Value'].max()
+    df = df.T.drop_duplicates().T  # Removing duplicate columns
+    df = df.infer_objects()  # Correct object types
 
-df_plot['Value'] = (df_plot['Value'] - norm_min) / (norm_max - norm_min)
+    df_plot = df[(df['Year'] == year) & (df['Region'] != '')]
+    df_plot = df_plot.iloc[:, [0, 1, -1]]
 
-# Using country code as an index for further use in draw_plot
-df_plot.set_index('CountryCode', inplace=True)
-df_plot.dropna(inplace=True)
+    if (df_plot['Value'].max() <= 0):
+        raise Exception('No data to plot')
 
-# Determining the color bins
-_, bins = np.histogram(df_plot['Value'], bins=5)
-df_plot['bin'] = np.digitize(df_plot['Value'], bins)
-bins_real = norm_min + bins * (norm_max - norm_min)
+    # Normalizing the data to show percentages
+    norm_min = df_plot['Value'].min()
+    norm_max = df_plot['Value'].max()
+    df_plot['Value'] = (df_plot['Value'] - norm_min) / (norm_max - norm_min)
 
-# Calling the plot function
-fig, ax = draw_plot(df_plot, bins, bins_real, year, title, legend_title)
-plt.show()
+    # Using countrycode as an index to use it in draw_plot
+    df_plot.set_index('CountryCode', inplace=True)
+    df_plot.dropna(inplace=True)
+
+    # Calculating the bin distribution
+    _, bins = np.histogram(df_plot['Value'], bins=5)
+    df_plot['bin'] = np.digitize(df_plot['Value'], bins)
+    bins_real = norm_min + bins * (norm_max - norm_min)
+
+    return df, draw_plot(df_plot, bins, bins_real, year, title, legend_title, show_values_inside)
